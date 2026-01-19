@@ -1,68 +1,158 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    /* 라이트 모드 색상 */
+    --color-bg: 255 255 255;
+    --color-text: 17 24 39;
+    --color-border: 229 231 235;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    /* 다크 모드 색상 */
+    --color-bg: 17 24 39;
+    --color-text: 249 250 251;
+    --color-border: 55 65 81;
   }
-  button {
-    background-color: #f9f9f9;
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-text));
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* 스크롤바 스타일 */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--color-bg));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}
+
+@layer components {
+  /* 섹션 공통 스타일 */
+  .section {
+    @apply py-20 px-4 md:px-8 lg:px-16;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12;
+  }
+
+  /* 버튼 스타일 */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold;
+    @apply hover:bg-primary-700 transition-all duration-300;
+    @apply shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-secondary-200 dark:bg-secondary-700 text-secondary-900 dark:text-white rounded-lg font-semibold;
+    @apply hover:bg-secondary-300 dark:hover:bg-secondary-600 transition-all duration-300;
+  }
+
+  .btn-accent {
+    @apply px-6 py-3 bg-accent-500 text-white rounded-lg font-semibold;
+    @apply hover:bg-accent-600 transition-all duration-300;
+    @apply shadow-lg hover:shadow-xl;
+  }
+
+  /* 카드 스타일 */
+  .card {
+    @apply bg-white dark:bg-secondary-800 rounded-xl shadow-lg;
+    @apply border border-secondary-200 dark:border-secondary-700;
+    @apply transition-all duration-300;
+    @apply hover:shadow-2xl hover:-translate-y-1;
+  }
+
+  /* 입력 필드 */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-white dark:bg-secondary-800;
+    @apply border border-secondary-300 dark:border-secondary-600;
+    @apply text-secondary-900 dark:text-white;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500;
+    @apply transition-all duration-300;
+  }
+
+}
+
+/* 그라디언트 텍스트 - @apply 사용 불가로 일반 CSS 사용 */
+.gradient-text {
+  background: linear-gradient(to right, #2563eb, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer utilities {
+  /* 애니메이션 유틸리티 */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 글래스모피즘 효과 */
+  .glass {
+    @apply bg-white/10 dark:bg-secondary-900/10 backdrop-blur-lg;
+    @apply border border-white/20 dark:border-secondary-700/20;
+  }
+
+  /* 그리드 패턴 배경 */
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, currentColor 1px, transparent 1px),
+      linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }
