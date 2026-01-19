@@ -37,7 +37,7 @@ const Hero = () => {
         delayChildren: 0.3,
       },
     },
-  };
+  } as const;
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -46,10 +46,9 @@ const Hero = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
       },
     },
-  };
+  } as const;
 
   const buttonVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -58,7 +57,6 @@ const Hero = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
       },
     },
     hover: {
@@ -70,7 +68,7 @@ const Hero = () => {
     tap: {
       scale: 0.95,
     },
-  };
+  } as const;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">

@@ -35,10 +35,9 @@ const TechStack = () => {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: 'easeOut',
       },
     },
-  };
+  } as const;
 
   const categoryVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -47,10 +46,9 @@ const TechStack = () => {
       scale: 1,
       transition: {
         duration: 0.4,
-        ease: 'easeOut',
       },
     },
-  };
+  } as const;
 
   return (
     <section id="skills" className="section bg-secondary-50 dark:bg-secondary-800/50">
@@ -184,7 +182,7 @@ const TechStack = () => {
                       initial={{ width: 0 }}
                       whileInView={{ width: `${skill.level}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1, delay: index * 0.1, ease: 'easeOut' }}
+                      transition={{ duration: 1, delay: index * 0.1 }}
                       className={`h-full ${progressColor} rounded-full relative`}
                     >
                       <div className="absolute inset-0 bg-white/20 animate-pulse" />
