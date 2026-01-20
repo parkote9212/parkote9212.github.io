@@ -149,7 +149,7 @@ const Hero = () => {
           variants={itemVariants}
           className="text-lg sm:text-xl md:text-2xl text-secondary-600 dark:text-secondary-300 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          창업 경험을 통해{" "}
+          다양한 경험을 통해{" "}
           <span className="font-semibold text-primary-600 dark:text-primary-400">
             기획부터 배포까지
           </span>
