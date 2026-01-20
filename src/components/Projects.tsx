@@ -1,20 +1,28 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
-import { FiCheck, FiExternalLink, FiFileText, FiGithub, FiX } from 'react-icons/fi';
-import type { Project } from '../data/projects';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import {
+  FiCheck,
+  FiExternalLink,
+  FiFileText,
+  FiGithub,
+  FiX,
+} from "react-icons/fi";
+import type { Project } from "../data/projects";
 import {
   getStatusColor,
   getStatusText,
   getTagColor,
-  projects
-} from '../data/projects';
+  projects,
+} from "../data/projects";
 
 const Projects = () => {
-  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>('all');
+  const [filter, setFilter] = useState<"all" | "completed" | "in-progress">(
+    "all",
+  );
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filteredProjects =
-    filter === 'all'
+    filter === "all"
       ? projects
       : projects.filter((project) => project.status === filter);
 
@@ -42,20 +50,22 @@ const Projects = () => {
   const modalVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.8,
+      scale: 0.95,
     },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.3,
+        duration: 0.2,
+        ease: "easeOut",
       },
     },
     exit: {
       opacity: 0,
-      scale: 0.8,
+      scale: 0.95,
       transition: {
         duration: 0.2,
+        ease: "easeIn",
       },
     },
   } as const;
@@ -72,6 +82,7 @@ const Projects = () => {
         variants={itemVariants}
         whileHover={{ y: -10 }}
         onClick={() => setSelectedProject(project)}
+        style={{ willChange: "transform, opacity" }}
         className="card group overflow-hidden h-full flex flex-col cursor-pointer"
       >
         {/* Project Image */}
@@ -82,13 +93,13 @@ const Projects = () => {
               alt={project.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {
-                e.currentTarget.style.display = 'none';
+                e.currentTarget.style.display = "none";
               }}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 via-accent-200 to-primary-300 dark:from-primary-800 dark:via-accent-800 dark:to-primary-900">
               <div className="text-7xl opacity-30">
-                {project.featured ? '⭐' : '📁'}
+                {project.featured ? "⭐" : "📁"}
               </div>
             </div>
           )}
@@ -97,7 +108,7 @@ const Projects = () => {
           <div className="absolute top-4 right-4">
             <span
               className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm ${getStatusColor(
-                project.status
+                project.status,
               )}`}
             >
               {getStatusText(project.status)}
@@ -222,6 +233,40 @@ const Projects = () => {
   };
 
   const ProjectModal = ({ project }: { project: Project }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const displayImages =
+      project.images || (project.image ? [project.image] : []);
+
+    // 프로젝트가 변경될 때마다 이미지 인덱스 초기화
+    useEffect(() => {
+      setCurrentImageIndex(0);
+    }, [project.id]);
+
+    // 모달 열릴 때 body scroll 막기
+    useEffect(() => {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        // 닫힐 때 원본 스타일로 명시적 복구
+        document.body.style.overflow =
+          originalStyle === "hidden" ? "unset" : originalStyle;
+
+        // 브라우저에게 레이아웃을 다시 그리도록 자극
+        window.dispatchEvent(new Event("resize"));
+      };
+    }, []);
+
+    const nextImage = () => {
+      setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+    };
+
+    const prevImage = () => {
+      setCurrentImageIndex(
+        (prev) => (prev - 1 + displayImages.length) % displayImages.length,
+      );
+    };
+
     return (
       <motion.div
         variants={overlayVariants}
@@ -251,21 +296,79 @@ const Projects = () => {
             </motion.button>
           </div>
 
-          {/* Image */}
-          <div className="relative h-64 md:h-80 -mt-16 bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/20 dark:to-accent-900/20">
-            {project.image ? (
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+          {/* Image Slider */}
+          <div className="relative h-64 md:h-80 -mt-16 bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/20 dark:to-accent-900/20 group">
+            {displayImages.length > 0 ? (
+              <>
+                <motion.img
+                  key={currentImageIndex}
+                  src={displayImages[currentImageIndex]}
+                  alt={`${project.title} - ${currentImageIndex + 1}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+
+                {/* Navigation Arrows - Only show if multiple images */}
+                {displayImages.length > 1 && (
+                  <>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ←
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      →
+                    </motion.button>
+
+                    {/* Image Counter */}
+                    <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-sm">
+                      {currentImageIndex + 1} / {displayImages.length}
+                    </div>
+
+                    {/* Dots Indicator */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {displayImages.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentImageIndex(index);
+                          }}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            index === currentImageIndex
+                              ? "bg-white w-6"
+                              : "bg-white/50 hover:bg-white/75"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 via-accent-200 to-primary-300 dark:from-primary-800 dark:via-accent-800 dark:to-primary-900">
                 <div className="text-9xl opacity-30">
-                  {project.featured ? '⭐' : '📁'}
+                  {project.featured ? "⭐" : "📁"}
                 </div>
               </div>
             )}
@@ -279,7 +382,7 @@ const Projects = () => {
               )}
               <span
                 className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm ${getStatusColor(
-                  project.status
+                  project.status,
                 )}`}
               >
                 {getStatusText(project.status)}
@@ -326,7 +429,7 @@ const Projects = () => {
                   <span
                     key={index}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium ${getTagColor(
-                      tag
+                      tag,
                     )}`}
                   >
                     {tag}
@@ -434,35 +537,40 @@ const Projects = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setFilter('all')}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${filter === 'all'
-              ? 'bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg'
-              : 'bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md'
-              }`}
+            onClick={() => setFilter("all")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+              filter === "all"
+                ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
+            }`}
           >
             🌟 All Projects ({projects.length})
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setFilter('completed')}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${filter === 'completed'
-              ? 'bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg'
-              : 'bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md'
-              }`}
+            onClick={() => setFilter("completed")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+              filter === "completed"
+                ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
+            }`}
           >
-            ✅ Completed ({projects.filter((p) => p.status === 'completed').length})
+            ✅ Completed (
+            {projects.filter((p) => p.status === "completed").length})
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setFilter('in-progress')}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${filter === 'in-progress'
-              ? 'bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg'
-              : 'bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md'
-              }`}
+            onClick={() => setFilter("in-progress")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+              filter === "in-progress"
+                ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
+            }`}
           >
-            🚧 In Progress ({projects.filter((p) => p.status === 'in-progress').length})
+            🚧 In Progress (
+            {projects.filter((p) => p.status === "in-progress").length})
           </motion.button>
         </motion.div>
 
@@ -471,12 +579,12 @@ const Projects = () => {
           key={filter}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
+          exit={{ opacity: 1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
         >
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={`${filter}-${project.id}`} project={project} />
           ))}
         </motion.div>
 
@@ -522,8 +630,10 @@ const Projects = () => {
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {selectedProject && <ProjectModal project={selectedProject} />}
+      <AnimatePresence mode="wait">
+        {selectedProject && (
+          <ProjectModal key="project-modal" project={selectedProject} />
+        )}
       </AnimatePresence>
     </section>
   );
