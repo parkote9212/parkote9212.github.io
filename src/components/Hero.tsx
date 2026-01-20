@@ -1,8 +1,11 @@
-import { motion } from 'framer-motion';
-import { FiArrowDown, FiDownload } from 'react-icons/fi';
+import { motion } from "framer-motion";
+import { FiArrowDown, FiFileText } from "react-icons/fi";
 
 const Hero = () => {
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -12,19 +15,16 @@ const Hero = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   };
 
-  const handleDownloadResume = () => {
-    // resume.pdf 다운로드 로직
-    const link = document.createElement('a');
-    link.href = '/resume.pdf';
-    link.download = 'GCPark_Resume.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleOpenResume = () => {
+    window.open(
+      "https://unique-flyingfish-69a.notion.site/Resume-2ee800a6a8978019af0cd397ebe53bca?source=copy_link",
+      "_blank",
+    );
   };
 
   // 애니메이션 variants
@@ -85,7 +85,7 @@ const Hero = () => {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
         />
         <motion.div
@@ -98,7 +98,7 @@ const Hero = () => {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
         />
         <motion.div
@@ -111,7 +111,7 @@ const Hero = () => {
           transition={{
             duration: 15,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
         />
       </div>
@@ -141,9 +141,7 @@ const Hero = () => {
           <span className="block text-secondary-900 dark:text-white mb-2">
             안정적인 서비스를 구축하는
           </span>
-          <span className="block gradient-text">
-            Full Stack Developer
-          </span>
+          <span className="block gradient-text">Full Stack Developer</span>
         </motion.h1>
 
         {/* Subtext */}
@@ -151,7 +149,7 @@ const Hero = () => {
           variants={itemVariants}
           className="text-lg sm:text-xl md:text-2xl text-secondary-600 dark:text-secondary-300 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          창업 경험을 통해{' '}
+          창업 경험을 통해{" "}
           <span className="font-semibold text-primary-600 dark:text-primary-400">
             기획부터 배포까지
           </span>
@@ -166,7 +164,7 @@ const Hero = () => {
           {/* Primary CTA - 프로젝트 보기 */}
           <motion.a
             href="#projects"
-            onClick={(e) => handleScroll(e, '#projects')}
+            onClick={(e) => handleScroll(e, "#projects")}
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
@@ -181,14 +179,14 @@ const Hero = () => {
 
           {/* Secondary CTA - 이력서 다운로드 */}
           <motion.button
-            onClick={handleDownloadResume}
+            onClick={handleOpenResume}
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
             className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white rounded-xl font-semibold text-lg border-2 border-secondary-200 dark:border-secondary-700 hover:border-primary-500 dark:hover:border-primary-500 shadow-lg hover:shadow-xl transition-all"
           >
-            <FiDownload className="group-hover:translate-y-1 transition-transform duration-300" />
-            이력서 다운로드
+            <FiFileText className="group-hover:translate-y-[-2px] transition-transform duration-300" />{" "}
+            이력서 보기
           </motion.button>
         </motion.div>
 
@@ -207,7 +205,7 @@ const Hero = () => {
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           >
             <FiArrowDown className="text-secondary-400 dark:text-secondary-500 w-6 h-6" />
@@ -225,7 +223,7 @@ const Hero = () => {
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: 'linear',
+          ease: "linear",
         }}
       />
       <motion.div
@@ -237,7 +235,7 @@ const Hero = () => {
         transition={{
           duration: 15,
           repeat: Infinity,
-          ease: 'linear',
+          ease: "linear",
         }}
       />
     </section>

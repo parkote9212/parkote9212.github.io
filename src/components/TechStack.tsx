@@ -1,22 +1,20 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import {
   skills,
   skillCategories,
   getSkillsByCategory,
   getLevelText,
   getProgressBarColor,
-} from '../data/skills';
+} from "../data/skills";
 
 const TechStack = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const categories = Object.entries(skillCategories);
 
   const filteredSkills =
-    selectedCategory === 'all'
-      ? skills
-      : getSkillsByCategory(selectedCategory);
+    selectedCategory === "all" ? skills : getSkillsByCategory(selectedCategory);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -51,7 +49,10 @@ const TechStack = () => {
   } as const;
 
   return (
-    <section id="skills" className="section bg-secondary-50 dark:bg-secondary-800/50">
+    <section
+      id="skills"
+      className="section bg-secondary-50 dark:bg-secondary-800/50"
+    >
       <div className="section-container">
         {/* Section Title */}
         <motion.div
@@ -79,11 +80,11 @@ const TechStack = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setSelectedCategory('all')}
+            onClick={() => setSelectedCategory("all")}
             className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-              selectedCategory === 'all'
-                ? 'bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg'
-                : 'bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md'
+              selectedCategory === "all"
+                ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
             }`}
           >
             🌟 All
@@ -98,8 +99,8 @@ const TechStack = () => {
               onClick={() => setSelectedCategory(key)}
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                 selectedCategory === key
-                  ? 'bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg'
-                  : 'bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md'
+                  ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                  : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
               }`}
             >
               {category.icon} {category.name}
@@ -108,24 +109,34 @@ const TechStack = () => {
         </motion.div>
 
         {/* Category Description */}
-        {selectedCategory !== 'all' && (
-          <motion.div
-            key={selectedCategory}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-secondary-800 rounded-full shadow-md">
-              <span className="text-2xl">
-                {skillCategories[selectedCategory as keyof typeof skillCategories].icon}
-              </span>
-              <p className="text-secondary-600 dark:text-secondary-300 font-medium">
-                {skillCategories[selectedCategory as keyof typeof skillCategories].description}
-              </p>
-            </div>
-          </motion.div>
-        )}
+        <AnimatePresence mode="wait">
+          {selectedCategory !== "all" && (
+            <motion.div
+              key={selectedCategory}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-center mb-12"
+            >
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-secondary-800 rounded-full shadow-md">
+                <span className="text-2xl">
+                  {
+                    skillCategories[
+                      selectedCategory as keyof typeof skillCategories
+                    ].icon
+                  }
+                </span>
+                <p className="text-secondary-600 dark:text-secondary-300 font-medium">
+                  {
+                    skillCategories[
+                      selectedCategory as keyof typeof skillCategories
+                    ].description
+                  }
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Skills Grid */}
         <motion.div
@@ -161,7 +172,11 @@ const TechStack = () => {
                         {skill.name}
                       </h3>
                       <span className="text-xs text-secondary-500 dark:text-secondary-400">
-                        {skillCategories[skill.category as keyof typeof skillCategories].name}
+                        {
+                          skillCategories[
+                            skill.category as keyof typeof skillCategories
+                          ].name
+                        }
                       </span>
                     </div>
                   </div>
@@ -198,9 +213,7 @@ const TechStack = () => {
                 )}
 
                 {/* Hover Effect Border */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-xl"
-                />
+                <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-xl" />
               </motion.div>
             );
           })}
@@ -218,7 +231,7 @@ const TechStack = () => {
             const categorySkills = getSkillsByCategory(key);
             const avgLevel = Math.round(
               categorySkills.reduce((sum, skill) => sum + skill.level, 0) /
-                categorySkills.length
+                categorySkills.length,
             );
 
             return (
@@ -252,7 +265,7 @@ const TechStack = () => {
           className="mt-16 text-center"
         >
           <p className="text-lg text-secondary-600 dark:text-secondary-300 italic">
-            "기술은 도구일 뿐, 중요한 것은{' '}
+            "기술은 도구일 뿐, 중요한 것은{" "}
             <span className="font-bold gradient-text">문제 해결</span>입니다."
           </p>
         </motion.div>
