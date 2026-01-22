@@ -56,7 +56,7 @@ React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX
    - GitHub 링크, Demo 링크
 
 5. **Resume** - 이력서 다운로드
-   - PDF 다운로드 기능
+   - 노션 링크 기능
    - 경력 요약 카드
 
 6. **Contact** - 연락처
