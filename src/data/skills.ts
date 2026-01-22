@@ -1,6 +1,7 @@
 import React from "react";
-import { FaJava } from "react-icons/fa";
-import { FiDatabase } from "react-icons/fi";
+import { FaJava, FaRocket } from "react-icons/fa";
+import { FiDatabase, FiSettings, FiCpu } from "react-icons/fi";
+import { HiOutlineColorSwatch } from "react-icons/hi";
 import {
   SiAmazon,
   SiCss3,
@@ -133,6 +134,14 @@ export const skills: Skill[] = [
     color: "text-blue-800",
     description: "쿼리 최적화, 인덱싱, 트랜잭션",
   },
+  {
+    name: "RDBMS",
+    level: 70,
+    icon: FiDatabase,
+    category: "database",
+    color: "text-purple-600",
+    description: "관계형 데이터베이스 설계 및 관리",
+  },
 
   // DevOps
   {
@@ -208,31 +217,31 @@ export const skillCategories = {
     name: "Frontend",
     description: "사용자 인터페이스 개발",
     color: "from-blue-500 to-cyan-500",
-    icon: "🎨",
+    icon: HiOutlineColorSwatch,
   },
   backend: {
     name: "Backend",
     description: "서버 및 비즈니스 로직",
     color: "from-green-500 to-emerald-500",
-    icon: "⚙️",
+    icon: FiSettings,
   },
   database: {
     name: "Database",
     description: "데이터 관리 및 저장",
     color: "from-purple-500 to-pink-500",
-    icon: "🗄️",
+    icon: FiDatabase,
   },
   devops: {
     name: "DevOps",
     description: "배포 및 인프라 관리",
     color: "from-orange-500 to-red-500",
-    icon: "🚀",
+    icon: FaRocket,
   },
   ai: {
     name: "AI Tools",
     description: "AI 도구 활용 및 생산성",
     color: "from-indigo-500 to-purple-500",
-    icon: "🤖",
+    icon: FiCpu,
   },
 };
 

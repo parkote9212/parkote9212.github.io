@@ -14,8 +14,9 @@ const Navbar = () => {
     { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
     { name: 'Resume', href: '#resume' },
+    { name: 'Contact', href: '#contact' },
+   
   ];
 
   // 스크롤 감지
@@ -24,7 +25,7 @@ const Navbar = () => {
       setScrolled(window.scrollY > 50);
 
       // 현재 활성 섹션 감지
-      const sections = ['about', 'skills', 'projects', 'contact', 'resume'];
+      const sections = ['about', 'skills', 'projects',  'resume','contact'];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {

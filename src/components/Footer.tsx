@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FiGithub, FiArrowUp } from 'react-icons/fi';
+import { FiGithub, FiArrowUp, FiMail } from 'react-icons/fi';
 import { SiReact, SiTypescript, SiTailwindcss } from 'react-icons/si';
 
 const Footer = () => {
@@ -107,7 +107,7 @@ const Footer = () => {
                 className="p-3 bg-secondary-800 hover:bg-secondary-700 rounded-lg transition-colors text-sm font-medium"
                 aria-label="Email"
               >
-                📧
+                <FiMail className="w-5 h-5" />
               </motion.a>
             </div>
           </motion.div>

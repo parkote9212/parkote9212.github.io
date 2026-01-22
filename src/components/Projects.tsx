@@ -1,12 +1,20 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, memo } from "react";
 import {
   FiCheck,
   FiExternalLink,
   FiFileText,
   FiGithub,
   FiX,
+  FiPause,
+  FiPlay,
+  FiStar,
+  FiFolder,
+  FiCalendar,
+  FiUser,
+  FiInbox,
 } from "react-icons/fi";
+import { HiOutlineCheckCircle, HiOutlineWrenchScrewdriver } from "react-icons/hi2";
 import type { Project } from "../data/projects";
 import {
   getStatusColor,
@@ -21,17 +29,21 @@ const Projects = () => {
   );
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const filteredProjects =
-    filter === "all"
-      ? projects
-      : projects.filter((project) => project.status === filter);
+  const filteredProjects = useMemo(
+    () =>
+      filter === "all"
+        ? projects
+        : projects.filter((project) => project.status === filter),
+    [filter],
+  );
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
       },
     },
   };
@@ -42,7 +54,8 @@ const Projects = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4,
+        ease: "easeOut",
       },
     },
   } as const;
@@ -76,13 +89,13 @@ const Projects = () => {
     exit: { opacity: 0 },
   };
 
-  const ProjectCard = ({ project }: { project: Project }) => {
+  const ProjectCard = memo(({ project }: { project: Project }) => {
     return (
       <motion.div
         variants={itemVariants}
         whileHover={{ y: -10 }}
         onClick={() => setSelectedProject(project)}
-        style={{ willChange: "transform, opacity" }}
+        style={{ willChange: "transform" }}
         className="card group overflow-hidden h-full flex flex-col cursor-pointer"
       >
         {/* Project Image */}
@@ -91,6 +104,7 @@ const Projects = () => {
             <img
               src={project.image}
               alt={project.title}
+              loading="lazy"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
@@ -98,8 +112,12 @@ const Projects = () => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 via-accent-200 to-primary-300 dark:from-primary-800 dark:via-accent-800 dark:to-primary-900">
-              <div className="text-7xl opacity-30">
-                {project.featured ? "⭐" : "📁"}
+              <div className="opacity-30">
+                {project.featured ? (
+                  <FiStar className="w-16 h-16 text-yellow-400" />
+                ) : (
+                  <FiFolder className="w-16 h-16 text-primary-400" />
+                )}
               </div>
             </div>
           )}
@@ -118,8 +136,9 @@ const Projects = () => {
           {/* Featured Badge */}
           {project.featured && (
             <div className="absolute top-4 left-4">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700">
-                ⭐ Featured
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700">
+                <FiStar className="w-3 h-3" />
+                Featured
               </span>
             </div>
           )}
@@ -138,8 +157,9 @@ const Projects = () => {
               {project.title}
             </h3>
             {project.period && (
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                📅 {project.period}
+              <p className="inline-flex items-center gap-1.5 text-sm text-secondary-500 dark:text-secondary-400">
+                <FiCalendar className="w-4 h-4" />
+                {project.period}
               </p>
             )}
           </div>
@@ -152,7 +172,8 @@ const Projects = () => {
           {/* Role */}
           <div className="mb-4">
             <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium">
-              👤 {project.role}
+              <FiUser className="w-4 h-4" />
+              {project.role}
             </span>
           </div>
 
@@ -226,20 +247,39 @@ const Projects = () => {
                 Demo
               </motion.a>
             )}
+            {project.docs && (
+              <motion.a
+                href={project.docs}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-accent-600 text-white rounded-lg text-sm font-medium hover:bg-accent-700 transition-colors"
+              >
+                <FiFileText />
+                문서
+              </motion.a>
+            )}
           </div>
         </div>
       </motion.div>
     );
-  };
+  });
+  
+  ProjectCard.displayName = "ProjectCard";
 
   const ProjectModal = ({ project }: { project: Project }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
     const displayImages =
       project.images || (project.image ? [project.image] : []);
 
     // 프로젝트가 변경될 때마다 이미지 인덱스 초기화
     useEffect(() => {
       setCurrentImageIndex(0);
+      setIsAutoPlay(true);
     }, [project.id]);
 
     // 모달 열릴 때 body scroll 막기
@@ -257,14 +297,36 @@ const Projects = () => {
       };
     }, []);
 
+    // 자동 슬라이드 기능
+    useEffect(() => {
+      // 이미지가 1개 이하이거나 자동재생이 꺼져있거나 호버 중이면 실행하지 않음
+      if (displayImages.length <= 1 || !isAutoPlay || isHovered) {
+        return;
+      }
+
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+      }, 6000); // 6초마다 자동 전환
+
+      return () => clearInterval(interval);
+    }, [displayImages.length, isAutoPlay, isHovered]);
+
     const nextImage = () => {
       setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+      // 수동 조작 시 자동 슬라이드 일시정지 및 리셋
+      setIsAutoPlay(false);
     };
 
     const prevImage = () => {
       setCurrentImageIndex(
         (prev) => (prev - 1 + displayImages.length) % displayImages.length,
       );
+      // 수동 조작 시 자동 슬라이드 일시정지 및 리셋
+      setIsAutoPlay(false);
+    };
+
+    const toggleAutoPlay = () => {
+      setIsAutoPlay((prev) => !prev);
     };
 
     return (
@@ -297,7 +359,11 @@ const Projects = () => {
           </div>
 
           {/* Image Slider */}
-          <div className="relative h-64 md:h-80 -mt-16 bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/20 dark:to-accent-900/20 group">
+          <div
+            className="relative h-64 md:h-80 -mt-16 bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/20 dark:to-accent-900/20 group"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             {displayImages.length > 0 ? (
               <>
                 <motion.img
@@ -307,6 +373,7 @@ const Projects = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
+                  loading="eager"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
@@ -323,7 +390,7 @@ const Projects = () => {
                         e.stopPropagation();
                         prevImage();
                       }}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     >
                       ←
                     </motion.button>
@@ -335,24 +402,43 @@ const Projects = () => {
                         e.stopPropagation();
                         nextImage();
                       }}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     >
                       →
                     </motion.button>
 
+                    {/* Auto Play Toggle Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleAutoPlay();
+                      }}
+                      className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-sm z-10"
+                      title={isAutoPlay ? "자동 재생 일시정지" : "자동 재생 시작"}
+                    >
+                      {isAutoPlay ? (
+                        <FiPause className="w-4 h-4" />
+                      ) : (
+                        <FiPlay className="w-4 h-4" />
+                      )}
+                    </motion.button>
+
                     {/* Image Counter */}
-                    <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-sm">
+                    <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm rounded-full text-white text-sm z-10">
                       {currentImageIndex + 1} / {displayImages.length}
                     </div>
 
                     {/* Dots Indicator */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                       {displayImages.map((_, index) => (
                         <button
                           key={index}
                           onClick={(e) => {
                             e.stopPropagation();
                             setCurrentImageIndex(index);
+                            setIsAutoPlay(false);
                           }}
                           className={`w-2 h-2 rounded-full transition-all ${
                             index === currentImageIndex
@@ -367,8 +453,12 @@ const Projects = () => {
               </>
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 via-accent-200 to-primary-300 dark:from-primary-800 dark:via-accent-800 dark:to-primary-900">
-                <div className="text-9xl opacity-30">
-                  {project.featured ? "⭐" : "📁"}
+                <div className="opacity-30">
+                  {project.featured ? (
+                    <FiStar className="w-24 h-24 text-yellow-400" />
+                  ) : (
+                    <FiFolder className="w-24 h-24 text-primary-400" />
+                  )}
                 </div>
               </div>
             )}
@@ -376,8 +466,9 @@ const Projects = () => {
             {/* Badges on Image */}
             <div className="absolute top-4 left-4 flex gap-2">
               {project.featured && (
-                <span className="px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700">
-                  ⭐ Featured
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700">
+                  <FiStar className="w-3 h-3" />
+                  Featured
                 </span>
               )}
               <span
@@ -398,8 +489,9 @@ const Projects = () => {
                 {project.title}
               </h2>
               {project.period && (
-                <p className="text-secondary-500 dark:text-secondary-400">
-                  📅 {project.period}
+                <p className="inline-flex items-center gap-1.5 text-secondary-500 dark:text-secondary-400">
+                  <FiCalendar className="w-4 h-4" />
+                  {project.period}
                 </p>
               )}
             </div>
@@ -415,7 +507,8 @@ const Projects = () => {
                 Role
               </h3>
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg font-medium">
-                👤 {project.role}
+                <FiUser className="w-4 h-4" />
+                {project.role}
               </span>
             </div>
 
@@ -492,15 +585,17 @@ const Projects = () => {
                 </motion.a>
               )}
               {project.docs && (
-                <motion.div
+                <motion.a
+                  href={project.docs}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-2 px-6 py-3 bg-accent-600 text-white rounded-lg font-semibold hover:bg-accent-700 transition-colors shadow-lg cursor-pointer"
-                  title={project.docs}
+                  className="flex items-center gap-2 px-6 py-3 bg-accent-600 text-white rounded-lg font-semibold hover:bg-accent-700 transition-colors shadow-lg"
                 >
                   <FiFileText className="w-5 h-5" />
-                  Documentation
-                </motion.div>
+                  개발운영문서
+                </motion.a>
               )}
             </div>
           </div>
@@ -538,55 +633,60 @@ const Projects = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("all")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
               filter === "all"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
             }`}
           >
-            🌟 All Projects ({projects.length})
+            <FiStar className="w-5 h-5" />
+            All Projects ({projects.length})
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("completed")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
               filter === "completed"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
             }`}
           >
-            ✅ Completed (
+            <HiOutlineCheckCircle className="w-5 h-5" />
+            Completed (
             {projects.filter((p) => p.status === "completed").length})
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("in-progress")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
               filter === "in-progress"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
             }`}
           >
-            🚧 In Progress (
+            <HiOutlineWrenchScrewdriver className="w-5 h-5" />
+            In Progress (
             {projects.filter((p) => p.status === "in-progress").length})
           </motion.button>
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          key={filter}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-        >
-          {filteredProjects.map((project) => (
-            <ProjectCard key={`${filter}-${project.id}`} project={project} />
-          ))}
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${filter}-${selectedProject ? 'modal-open' : 'modal-closed'}`}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+          >
+            {filteredProjects.map((project) => (
+              <ProjectCard key={`${filter}-${project.id}`} project={project} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Empty State */}
         {filteredProjects.length === 0 && (
@@ -595,7 +695,9 @@ const Projects = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-20"
           >
-            <div className="text-6xl mb-4">📭</div>
+            <div className="flex justify-center mb-4">
+              <FiInbox className="w-16 h-16 text-secondary-400 dark:text-secondary-500" />
+            </div>
             <p className="text-xl text-secondary-500 dark:text-secondary-400">
               해당 카테고리에 프로젝트가 없습니다.
             </p>

@@ -1,4 +1,4 @@
-# 🚀 Portfolio Website - Park GC
+# Portfolio Website
 
 > 안정적인 서비스를 구축하는 Full Stack Developer의 포트폴리오 사이트
 
@@ -6,22 +6,28 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.18-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## 📋 목차
 
-- [프로젝트 소개](#-프로젝트-소개)
+- [소개](#-소개)
 - [주요 기능](#-주요-기능)
 - [기술 스택](#-기술-스택)
 - [시작하기](#-시작하기)
+  - [필수 조건](#필수-조건)
+  - [설치](#설치)
+  - [사용 방법](#사용-방법)
 - [프로젝트 구조](#-프로젝트-구조)
 - [성능 최적화](#-성능-최적화)
 - [배포](#-배포)
+- [커스터마이징](#-커스터마이징)
+- [기여하기](#-기여하기)
+- [라이선스](#-라이선스)
 - [연락처](#-연락처)
 
-## 🎯 프로젝트 소개
+## 🎯 소개
 
-다양한 경험을 바탕으로 기획부터 배포까지 전체 사이클을 이해하는 개발자의 포트폴리오 사이트입니다.
-React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX와 성능 최적화에 중점을 두었습니다.
+다양한 경험을 바탕으로 기획부터 배포까지 전체 사이클을 이해하는 개발자의 포트폴리오 사이트입니다. React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX와 성능 최적화에 중점을 두었습니다.
 
 ### ✨ 특징
 
@@ -34,7 +40,7 @@ React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX
 
 ## 🎨 주요 기능
 
-### 📄 섹션 구성
+### 섹션 구성
 
 1. **Hero** - 메인 인트로 섹션
    - 역동적인 그라디언트 배경 애니메이션
@@ -69,7 +75,7 @@ React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX
    - Scroll to Top 버튼
    - Built with 정보
 
-### 🎭 애니메이션
+### 애니메이션
 
 - **페이지 로드**: 순차적 Fade-in 효과
 - **스크롤**: Section별 Reveal 애니메이션
@@ -89,7 +95,7 @@ React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX
 
 - **Framer Motion 12.1.0** - 애니메이션
 - **React Icons 5.4.0** - 아이콘
-- **React Router DOM 7.1.3** - 라우팅 (준비)
+- **React Router DOM 7.1.3** - 라우팅
 
 ### 개발 도구
 
@@ -107,33 +113,50 @@ React + TypeScript + Vite를 기반으로 제작되었으며, 현대적인 UI/UX
 
 ### 설치
 
+1. 저장소 클론
+
 ```bash
-# 저장소 클론
 git clone https://github.com/parkote9212/parkote9212.github.io.git
+```
 
-# 디렉토리 이동
+2. 프로젝트 디렉토리로 이동
+
+```bash
 cd parkote9212.github.io
+```
 
-# 의존성 설치
+3. 의존성 설치
+
+```bash
 npm install
 ```
 
-### 개발 서버 실행
+### 사용 방법
+
+#### 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 
-브라우저에서 `http://localhost:3000` 열기
+브라우저에서 `http://localhost:5173` (또는 Vite가 지정한 포트) 열기
 
-### 빌드
+#### 프로덕션 빌드
 
 ```bash
-# 프로덕션 빌드
 npm run build
+```
 
-# 빌드 결과 미리보기
+#### 빌드 결과 미리보기
+
+```bash
 npm run preview
+```
+
+#### 린트 실행
+
+```bash
+npm run lint
 ```
 
 ## 📁 프로젝트 구조
@@ -208,12 +231,15 @@ parkote9212.github.io/
 
 ### GitHub Pages
 
+1. 프로덕션 빌드
+
 ```bash
-# 빌드 및 배포
 npm run build
 ```
 
-GitHub Actions를 통한 자동 배포 설정됨 (`.github/workflows/deploy.yml`)
+2. GitHub Actions를 통한 자동 배포
+
+프로젝트에 `.github/workflows/deploy.yml` 파일이 설정되어 있으면 자동으로 배포됩니다.
 
 ### 환경 변수
 
@@ -244,24 +270,15 @@ colors: {
 - **프로젝트**: `src/data/projects.ts`
 - **About 타임라인**: `src/components/About.tsx`
 
-## 📝 스크립트
-
-```bash
-npm run dev       # 개발 서버 실행
-npm run build     # 프로덕션 빌드
-npm run preview   # 빌드 결과 미리보기
-npm run lint      # ESLint 실행
-```
-
-## 🤝 기여
+## 🤝 기여하기
 
 이슈와 PR은 언제나 환영입니다!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. 프로젝트 Fork
+2. 기능 브랜치 생성 (`git checkout -b feature/AmazingFeature`)
+3. 변경사항 커밋 (`git commit -m 'Add some AmazingFeature'`)
+4. 브랜치에 푸시 (`git push origin feature/AmazingFeature`)
+5. Pull Request 열기
 
 ## 📄 라이선스
 
@@ -271,7 +288,7 @@ npm run lint      # ESLint 실행
 
 **Park GC**
 
-- 📧 Email: parkote9212@gmail.com
+- 📧 Email: [parkote9212@gmail.com](mailto:parkote9212@gmail.com)
 - 💼 GitHub: [@parkote9212](https://github.com/parkote9212)
 - 🌐 Portfolio: [parkote9212.github.io](https://parkote9212.github.io)
 

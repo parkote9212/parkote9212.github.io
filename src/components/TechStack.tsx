@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { FiStar } from "react-icons/fi";
 import {
   skills,
   skillCategories,
@@ -81,31 +82,36 @@ const TechStack = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setSelectedCategory("all")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
               selectedCategory === "all"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
             }`}
           >
-            🌟 All
+            <FiStar className="w-5 h-5" />
+            All
           </motion.button>
 
           {/* Category Buttons */}
-          {categories.map(([key, category]) => (
-            <motion.button
-              key={key}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedCategory(key)}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                selectedCategory === key
-                  ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
-                  : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
-              }`}
-            >
-              {category.icon} {category.name}
-            </motion.button>
-          ))}
+          {categories.map(([key, category]) => {
+            const Icon = category.icon;
+            return (
+              <motion.button
+                key={key}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedCategory(key)}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  selectedCategory === key
+                    ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                    : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {category.name}
+              </motion.button>
+            );
+          })}
         </motion.div>
 
         {/* Category Description */}
@@ -119,13 +125,13 @@ const TechStack = () => {
               className="text-center mb-12"
             >
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-secondary-800 rounded-full shadow-md">
-                <span className="text-2xl">
-                  {
+                {(() => {
+                  const Icon =
                     skillCategories[
                       selectedCategory as keyof typeof skillCategories
-                    ].icon
-                  }
-                </span>
+                    ].icon;
+                  return <Icon className="w-6 h-6 text-primary-600 dark:text-primary-400" />;
+                })()}
                 <p className="text-secondary-600 dark:text-secondary-300 font-medium">
                   {
                     skillCategories[
@@ -234,6 +240,7 @@ const TechStack = () => {
                 categorySkills.length,
             );
 
+            const Icon = category.icon;
             return (
               <motion.div
                 key={key}
@@ -241,7 +248,9 @@ const TechStack = () => {
                 whileHover={{ scale: 1.05 }}
                 className="card p-4 text-center"
               >
-                <div className="text-3xl mb-2">{category.icon}</div>
+                <div className="flex justify-center mb-2">
+                  <Icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                </div>
                 <div className="text-2xl font-bold gradient-text mb-1">
                   {categorySkills.length}
                 </div>

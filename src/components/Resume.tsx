@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { FiFileText } from "react-icons/fi";
+import { FiFileText, FiBriefcase } from "react-icons/fi";
+import { FaRocket } from "react-icons/fa";
+import { HiOutlineAcademicCap } from "react-icons/hi2";
 import { fadeInUp, staggerContainer, staggerItem } from "../utils/animations";
 
 const Resume = () => {
@@ -83,7 +85,9 @@ const Resume = () => {
             className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             <motion.div whileHover={{ y: -5 }} className="card p-6 text-center">
-              <div className="text-4xl mb-3">💼</div>
+              <div className="flex justify-center mb-3">
+                <FiBriefcase className="w-10 h-10 text-primary-600 dark:text-primary-400" />
+              </div>
               <h4 className="text-lg font-bold text-secondary-900 dark:text-white mb-2">
                 경력
               </h4>
@@ -95,7 +99,9 @@ const Resume = () => {
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }} className="card p-6 text-center">
-              <div className="text-4xl mb-3">🎓</div>
+              <div className="flex justify-center mb-3">
+                <HiOutlineAcademicCap className="w-10 h-10 text-primary-600 dark:text-primary-400" />
+              </div>
               <h4 className="text-lg font-bold text-secondary-900 dark:text-white mb-2">
                 학력
               </h4>
@@ -107,7 +113,9 @@ const Resume = () => {
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }} className="card p-6 text-center">
-              <div className="text-4xl mb-3">🚀</div>
+              <div className="flex justify-center mb-3">
+                <FaRocket className="w-10 h-10 text-primary-600 dark:text-primary-400" />
+              </div>
               <h4 className="text-lg font-bold text-secondary-900 dark:text-white mb-2">
                 프로젝트
               </h4>

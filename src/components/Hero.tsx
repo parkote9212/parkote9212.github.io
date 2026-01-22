@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FiArrowDown, FiFileText } from "react-icons/fi";
+import { HiOutlineHandRaised } from "react-icons/hi2";
 
 const Hero = () => {
   const handleScroll = (
@@ -128,8 +129,9 @@ const Hero = () => {
       >
         {/* Greeting */}
         <motion.div variants={itemVariants} className="mb-6">
-          <span className="inline-block px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold">
-            👋 안녕하세요
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold">
+            <HiOutlineHandRaised className="w-4 h-4" />
+            안녕하세요
           </span>
         </motion.div>
 
