@@ -1,6 +1,6 @@
 import React from "react";
 import { FaJava, FaRocket } from "react-icons/fa";
-import { FiDatabase, FiSettings, FiCpu } from "react-icons/fi";
+import { FiCpu, FiDatabase, FiSettings } from "react-icons/fi";
 import { HiOutlineColorSwatch } from "react-icons/hi";
 import {
   SiAmazon,
@@ -33,64 +33,64 @@ export interface Skill {
 }
 
 export const skills: Skill[] = [
-  // Frontend
+  // Frontend (AI 의존도 반영하여 레벨 조정)
   {
     name: "HTML5",
-    level: 80,
+    level: 70,
     icon: SiHtml5,
     category: "frontend",
     color: "text-orange-600",
-    description: "시맨틱 마크업과 접근성을 고려한 구조화",
+    description: "시맨틱 마크업, WAI-ARIA 접근성 구현, SEO 최적화",
   },
   {
     name: "CSS3",
-    level: 75,
+    level: 65,
     icon: SiCss3,
     category: "frontend",
     color: "text-blue-600",
-    description: "Flexbox, Grid, 반응형 디자인",
+    description: "Flexbox/Grid 레이아웃, 모바일 반응형, 애니메이션 및 트랜지션",
   },
   {
     name: "JavaScript",
-    level: 70,
+    level: 60,
     icon: SiJavascript,
     category: "frontend",
     color: "text-yellow-500",
-    description: "ES6+, 비동기 처리, DOM 조작",
+    description: "ES6+ 문법, 이벤트 루프 이해, Promise/async-await 활용",
   },
   {
     name: "TypeScript",
-    level: 60,
+    level: 55,
     icon: SiTypescript,
     category: "frontend",
     color: "text-blue-700",
-    description: "타입 안정성을 활용한 개발",
+    description: "Union/Generics/Utility Types, 엄격한 타입 추론 및 구조적 타입 활용",
   },
   {
     name: "React",
-    level: 65,
+    level: 60,
     icon: SiReact,
     category: "frontend",
     color: "text-cyan-500",
-    description: "Hooks, 상태 관리, 컴포넌트 설계",
+    description: "함수형 컴포넌트, Hooks 활용, 렌더링 최적화 및 상태 관리 패턴",
   },
   {
     name: "Vue.js",
-    level: 50,
+    level: 45,
     icon: SiVuedotjs,
     category: "frontend",
     color: "text-green-600",
-    description: "기본 컴포넌트 개발 및 Composition API",
+    description: "컴포넌트 시스템, Composition API 기초, 반응성 시스템 이해",
   },
 
-  // Backend
+  // Backend (실제 코드 기반으로 정확하게)
   {
     name: "Java",
     level: 75,
     icon: FaJava,
     category: "backend",
     color: "text-red-600",
-    description: "OOP, 디자인 패턴, Java 8+",
+    description: "객체지향 설계, 디자인 패턴(Strategy/Factory/Builder), Java 21 기능 활용",
   },
   {
     name: "Spring Framework",
@@ -98,31 +98,31 @@ export const skills: Skill[] = [
     icon: SiSpring,
     category: "backend",
     color: "text-green-600",
-    description: "DI/IoC, AOP, MVC 패턴",
+    description: "DI/IoC 컨테이너, AOP 기반 횡단 관심사 처리, MVC 패턴 구현",
   },
   {
     name: "Spring Boot",
-    level: 70,
+    level: 75,
     icon: SiSpringboot,
     category: "backend",
     color: "text-green-700",
-    description: "RESTful API, 자동 설정, 내장 서버",
+    description: "RESTful API 설계, Spring Security, WebSocket 통신, Batch Job 구현",
   },
   {
     name: "JPA",
-    level: 60,
-    icon: FiDatabase,
-    category: "backend",
-    color: "text-purple-600",
-    description: "Entity 관리, 연관관계 매핑",
-  },
-  {
-    name: "MyBatis",
     level: 65,
     icon: FiDatabase,
     category: "backend",
+    color: "text-purple-600",
+    description: "Entity 설계 및 연관관계 매핑, N+1 문제 해결, Fetch 전략 최적화",
+  },
+  {
+    name: "MyBatis",
+    level: 70,
+    icon: FiDatabase,
+    category: "backend",
     color: "text-red-700",
-    description: "SQL 매핑, 동적 쿼리 작성",
+    description: "동적 SQL 작성, 복잡한 조인 및 서브쿼리 처리, 성능 최적화",
   },
 
   // Database
@@ -132,7 +132,7 @@ export const skills: Skill[] = [
     icon: SiMariadb,
     category: "database",
     color: "text-blue-800",
-    description: "쿼리 최적화, 인덱싱, 트랜잭션",
+    description: "관계형 DB 설계, 인덱싱 전략, 쿼리 성능 분석 및 최적화",
   },
   {
     name: "RDBMS",
@@ -140,33 +140,33 @@ export const skills: Skill[] = [
     icon: FiDatabase,
     category: "database",
     color: "text-purple-600",
-    description: "관계형 데이터베이스 설계 및 관리",
+    description: "ER 다이어그램 설계, 정규화 및 역정규화, ACID 트랜잭션 관리",
   },
 
   // DevOps
   {
     name: "Linux",
-    level: 65,
+    level: 60,
     icon: SiLinux,
     category: "devops",
     color: "text-gray-800",
-    description: "Shell 스크립트, 서버 관리",
+    description: "셸 스크립트, 시스템 관리, 권한 제어 및 프로세스 관리",
   },
   {
     name: "Docker",
-    level: 60,
+    level: 55,
     icon: SiDocker,
     category: "devops",
     color: "text-blue-600",
-    description: "컨테이너화, 이미지 관리, Docker Compose",
+    description: "이미지 빌드, Docker Compose",
   },
   {
     name: "AWS",
-    level: 65,
+    level: 60,
     icon: SiAmazon,
     category: "devops",
     color: "text-orange-500",
-    description: "EC2, RDS, S3 활용 및 배포",
+    description: "EC2 인스턴스 관리, RDS 데이터베이스 구축",
   },
   {
     name: "Git",
@@ -174,7 +174,7 @@ export const skills: Skill[] = [
     icon: SiGit,
     category: "devops",
     color: "text-orange-600",
-    description: "버전 관리, 브랜치 전략",
+    description: "버전 관리, Git Flow 전략, 충돌 해결 및 리베이싱",
   },
   {
     name: "GitHub",
@@ -182,7 +182,7 @@ export const skills: Skill[] = [
     icon: SiGithub,
     category: "devops",
     color: "text-gray-800",
-    description: "PR, 이슈 관리, CI/CD",
+    description: "PR 리뷰, 이슈 추적, Actions 자동화, 팀 협업 워크플로우",
   },
 
   // AI Tools
@@ -192,7 +192,7 @@ export const skills: Skill[] = [
     icon: TbBrandOpenai,
     category: "ai",
     color: "text-emerald-600",
-    description: "Cursor, Claude를 활용한 생산성 향상",
+    description: "Cursor/Claude 활용 효율적 코드 생성, 디버깅 및 코드 리뷰",
   },
   {
     name: "LLM 활용",
@@ -200,7 +200,7 @@ export const skills: Skill[] = [
     icon: TbBrandOpenai,
     category: "ai",
     color: "text-purple-600",
-    description: "프롬프트 엔지니어링, AI 기반 문제 해결",
+    description: "프롬프트 엔지니어링, 컨텍스트 설계, 복잡한 문제 해결 자동화",
   },
   {
     name: "MCP 연동",
@@ -208,7 +208,7 @@ export const skills: Skill[] = [
     icon: TbBrandOpenai,
     category: "ai",
     color: "text-indigo-600",
-    description: "Model Context Protocol 활용",
+    description: "Model Context Protocol, 외부 API 연동, 개발 워크플로우 자동화",
   },
 ];
 

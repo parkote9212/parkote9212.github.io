@@ -1,18 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState, useMemo, memo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
+  FiCalendar,
   FiCheck,
   FiExternalLink,
   FiFileText,
+  FiFolder,
   FiGithub,
-  FiX,
+  FiInbox,
   FiPause,
   FiPlay,
   FiStar,
-  FiFolder,
-  FiCalendar,
   FiUser,
-  FiInbox,
+  FiX,
 } from "react-icons/fi";
 import { HiOutlineCheckCircle, HiOutlineWrenchScrewdriver } from "react-icons/hi2";
 import type { Project } from "../data/projects";
@@ -100,9 +100,9 @@ const Projects = () => {
       >
         {/* Project Image */}
         <div className="relative h-48 bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/20 dark:to-accent-900/20 overflow-hidden">
-          {project.image ? (
+          {project.image || project.images?.[0] ? (
             <img
-              src={project.image}
+              src={project.image || project.images?.[0]}
               alt={project.title}
               loading="lazy"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -266,7 +266,7 @@ const Projects = () => {
       </motion.div>
     );
   });
-  
+
   ProjectCard.displayName = "ProjectCard";
 
   const ProjectModal = ({ project }: { project: Project }) => {
@@ -440,11 +440,10 @@ const Projects = () => {
                             setCurrentImageIndex(index);
                             setIsAutoPlay(false);
                           }}
-                          className={`w-2 h-2 rounded-full transition-all ${
-                            index === currentImageIndex
+                          className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
                               ? "bg-white w-6"
                               : "bg-white/50 hover:bg-white/75"
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>
@@ -633,11 +632,10 @@ const Projects = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("all")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
-              filter === "all"
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${filter === "all"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
-            }`}
+              }`}
           >
             <FiStar className="w-5 h-5" />
             All Projects ({projects.length})
@@ -646,11 +644,10 @@ const Projects = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("completed")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
-              filter === "completed"
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${filter === "completed"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
-            }`}
+              }`}
           >
             <HiOutlineCheckCircle className="w-5 h-5" />
             Completed (
@@ -660,11 +657,10 @@ const Projects = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setFilter("in-progress")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
-              filter === "in-progress"
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${filter === "in-progress"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
-            }`}
+              }`}
           >
             <HiOutlineWrenchScrewdriver className="w-5 h-5" />
             In Progress (
