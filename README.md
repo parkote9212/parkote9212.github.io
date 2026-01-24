@@ -250,6 +250,41 @@ npm run build
 VITE_FORMSPREE_ID=your_form_id_here
 ```
 
+#### 메일 기능 설정 방법
+
+1. **Formspree 계정 생성**
+   - [Formspree](https://formspree.io)에 접속하여 무료 계정을 만듭니다.
+
+2. **새 폼 생성**
+   - Formspree 대시보드에서 "New Form" 버튼을 클릭합니다.
+   - 폼 이름을 입력하고 생성합니다.
+
+3. **Form ID 확인**
+   - 생성된 폼의 상세 페이지에서 Form ID를 복사합니다.
+   - URL 형식: `https://formspree.io/f/YOUR_FORM_ID`
+
+4. **환경 변수 설정**
+   - 프로젝트 루트에 `.env` 파일을 생성합니다.
+   - 다음 내용을 추가합니다:
+     ```env
+     VITE_FORMSPREE_ID=your_actual_form_id
+     ```
+   - `your_actual_form_id`를 실제 Form ID로 교체합니다.
+
+5. **개발 서버 재시작**
+   - 환경 변수 변경 후 개발 서버를 재시작합니다:
+     ```bash
+     npm run dev
+     ```
+
+6. **GitHub Pages 배포 시**
+   - GitHub 저장소의 Settings > Secrets and variables > Actions로 이동합니다.
+   - "New repository secret" 버튼을 클릭합니다.
+   - Name: `VITE_FORMSPREE_ID`
+   - Value: 실제 Form ID를 입력합니다.
+   - "Add secret" 버튼을 클릭합니다.
+   - 이제 GitHub Actions가 자동으로 환경 변수를 사용하여 빌드합니다.
+
 ## 🎨 커스터마이징
 
 ### 색상 테마 변경

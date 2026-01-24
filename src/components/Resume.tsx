@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { FiFileText, FiBriefcase } from "react-icons/fi";
 import { FaRocket } from "react-icons/fa";
+import { FiBriefcase, FiFileText } from "react-icons/fi";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
 import { fadeInUp, staggerContainer, staggerItem } from "../utils/animations";
 
@@ -92,9 +92,9 @@ const Resume = () => {
                 경력
               </h4>
               <p className="text-secondary-600 dark:text-secondary-300">
-                풀스택 개발
+                건설업계 안전/품질 관리자
                 <br />
-                국비 교육 수료
+                (국내/해외 건설 현장)
               </p>
             </motion.div>
 
@@ -106,9 +106,13 @@ const Resume = () => {
                 학력
               </h4>
               <p className="text-secondary-600 dark:text-secondary-300">
-                게임프로그래밍 전공
+                게임프로그래밍 전공(1년후 자퇴)
                 <br />
-                다양한 경험
+              </p>
+              <p className="text-secondary-600 dark:text-secondary-300">
+                풀스택 개발
+                <br />
+                국비 교육 수료
               </p>
             </motion.div>
 

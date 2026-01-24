@@ -36,19 +36,19 @@ export const skills: Skill[] = [
   // Frontend (AI 의존도 반영하여 레벨 조정)
   {
     name: "HTML5",
-    level: 70,
+    level: 65,
     icon: SiHtml5,
     category: "frontend",
     color: "text-orange-600",
-    description: "시맨틱 마크업, WAI-ARIA 접근성 구현, SEO 최적화",
+    description: "웹 페이지 구조 작성 및 접근성 고려",
   },
   {
     name: "CSS3",
-    level: 65,
+    level: 60,
     icon: SiCss3,
     category: "frontend",
     color: "text-blue-600",
-    description: "Flexbox/Grid 레이아웃, 모바일 반응형, 애니메이션 및 트랜지션",
+    description: "반응형 레이아웃 및 스타일링",
   },
   {
     name: "JavaScript",
@@ -56,7 +56,7 @@ export const skills: Skill[] = [
     icon: SiJavascript,
     category: "frontend",
     color: "text-yellow-500",
-    description: "ES6+ 문법, 이벤트 루프 이해, Promise/async-await 활용",
+    description: "동적 웹 기능 구현",
   },
   {
     name: "TypeScript",
@@ -64,7 +64,7 @@ export const skills: Skill[] = [
     icon: SiTypescript,
     category: "frontend",
     color: "text-blue-700",
-    description: "Union/Generics/Utility Types, 엄격한 타입 추론 및 구조적 타입 활용",
+    description: "타입 안정성을 갖춘 JavaScript 개발",
   },
   {
     name: "React",
@@ -72,7 +72,7 @@ export const skills: Skill[] = [
     icon: SiReact,
     category: "frontend",
     color: "text-cyan-500",
-    description: "함수형 컴포넌트, Hooks 활용, 렌더링 최적화 및 상태 관리 패턴",
+    description: "컴포넌트 기반 UI 개발",
   },
   {
     name: "Vue.js",
@@ -80,7 +80,7 @@ export const skills: Skill[] = [
     icon: SiVuedotjs,
     category: "frontend",
     color: "text-green-600",
-    description: "컴포넌트 시스템, Composition API 기초, 반응성 시스템 이해",
+    description: "Vue 프레임워크 기초 활용",
   },
 
   // Backend (실제 코드 기반으로 정확하게)
@@ -90,7 +90,7 @@ export const skills: Skill[] = [
     icon: FaJava,
     category: "backend",
     color: "text-red-600",
-    description: "객체지향 설계, 디자인 패턴(Strategy/Factory/Builder), Java 21 기능 활용",
+    description: "객체지향 설계, 디자인 패턴, Morden Java 17/21 기능 활용",
   },
   {
     name: "Spring Framework",
@@ -146,7 +146,7 @@ export const skills: Skill[] = [
   // DevOps
   {
     name: "Linux",
-    level: 60,
+    level: 55,
     icon: SiLinux,
     category: "devops",
     color: "text-gray-800",

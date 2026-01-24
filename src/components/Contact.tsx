@@ -14,9 +14,18 @@ const Contact = () => {
     e.preventDefault();
     setStatus('loading');
 
-    // Formspree 연동 예시 (실제 사용 시 FORM_ID를 본인 것으로 교체)
+    // Formspree 연동
+    const formId = import.meta.env.VITE_FORMSPREE_ID;
+    
+    if (!formId || formId === 'YOUR_FORM_ID') {
+      console.error('Formspree Form ID가 설정되지 않았습니다. .env 파일에 VITE_FORMSPREE_ID를 설정해주세요.');
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 5000);
+      return;
+    }
+
     try {
-      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      const response = await fetch(`https://formspree.io/f/${formId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
