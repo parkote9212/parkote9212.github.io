@@ -7,6 +7,7 @@ export interface Project {
   highlights: string[];
   github?: string;
   demo?: string;
+  site?: string;
   docs?: string;
   status: "completed" | "in-progress" | "planned";
   image?: string;
@@ -18,9 +19,9 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
-    title: "BizSync - ERP 통합 칸반 관리 시스템",
+    title: "BizSync - 기업형 프로젝트 협업 플랫폼",
     description:
-      "실시간 협업 칸반보드 기반 프로젝트 관리 시스템. WebSocket을 활용한 실시간 업데이트, JWT 기반 인증, 결재 시스템 등 ERP 기능 통합",
+      "프로젝트 관리, 칸반 보드, 전자결재, 실시간 채팅을 통합한 팀 협업 솔루션. WebSocket 기반 실시간 동기화, JWT 인증, Spring AOP 기반 권한 관리, GitHub Actions CI/CD 배포 파이프라인 구축",
     tags: [
       "Spring Boot 3.5",
       "React 19",
@@ -31,23 +32,29 @@ export const projects: Project[] = [
       "JWT",
       "MariaDB",
       "Docker",
+      "AWS EC2",
+      "AWS RDS",
+      "AWS ECR",
+      "GitHub Actions",
     ],
     role: "개인 프로젝트 (풀스택)",
     highlights: [
-      "WebSocket(STOMP)을 활용한 실시간 칸반보드 드래그앤드롭 구현",
-      "Spring Security + JWT 기반 인증/인가 시스템 구축",
-      "JPA와 MyBatis 하이브리드 아키텍처 설계",
-      "결재 라인 시스템 및 알림 기능 개발",
-      "Docker Compose로 개발 환경 컨테이너화",
-      "EC2, RDS 배포 및 모니터링",
-      "Zustand를 활용한 전역 상태 관리",
-      "RESTful API 설계 및 Swagger 문서화",
+      "GitHub Actions + ECR + EC2 CI/CD 파이프라인 구축 (main 브랜치 푸시 시 자동 배포)",
+      "WebSocket(STOMP) 기반 실시간 칸반보드 동기화 및 낙관적 업데이트(Optimistic UI) 구현",
+      "Spring AOP로 프로젝트 권한 체크 로직 분리 (@RequireProjectLeader)",
+      "Spring Security + JWT 인증/인가 (Access + Refresh Token Rotation)",
+      "JPA + MyBatis 하이브리드 ORM (단순 CRUD vs 복잡 조인 쿼리 최적화)",
+      "비관적 락(Pessimistic Lock)으로 예산 차감 동시성 제어",
+      "다단계 결재 라인 시스템 및 예산 관리 기능",
+      "Docker Compose + Nginx 리버스 프록시 배포 환경 구성",
+      "Zustand 상태 관리 및 React 19 호환 Drag & Drop (@hello-pangea/dnd)",
     ],
     images: ["/images/bizsync1.gif", "/images/bizsync2.gif", "/images/bizsync3.gif"],
     github: "https://github.com/parkote9212/bizsync-project",
     status: "completed",
     docs: "https://www.notion.so/BizSync-2e9800a6a897803fa490f6a061179510?source=copy_link",
-    featured: false,
+    site: "http://54.180.155.0",
+    featured: true,
     period: "2026.01 - 2026.01",
   },
   {
@@ -202,6 +209,14 @@ export const tagColors: { [key: string]: string } = {
     "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
   "Redux Toolkit":
     "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+  "AWS EC2":
+    "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
+  "AWS RDS":
+    "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
+  "AWS ECR":
+    "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
+  "GitHub Actions":
+    "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400",
 };
 
 // 태그 색상 가져오기 (기본값 포함)

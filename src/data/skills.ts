@@ -166,7 +166,7 @@ export const skills: Skill[] = [
     icon: SiAmazon,
     category: "devops",
     color: "text-orange-500",
-    description: "EC2 인스턴스 관리, RDS 데이터베이스 구축",
+    description: "EC2 인스턴스 관리, RDS 데이터베이스 구 ECR 리포지토리를 통한 CI/CD 자동화",
   },
   {
     name: "Git",
@@ -182,7 +182,7 @@ export const skills: Skill[] = [
     icon: SiGithub,
     category: "devops",
     color: "text-gray-800",
-    description: "PR 리뷰, 이슈 추적, Actions 자동화, 팀 협업 워크플로우",
+    description: "PR 리뷰, 이슈 추적, CI/CD 자동화, 팀 협업 워크플로우",
   },
 
   // AI Tools

@@ -23,6 +23,15 @@ import {
   projects,
 } from "../data/projects";
 
+// URL에 프로토콜이 없으면 자동으로 http:// 추가
+const normalizeUrl = (url: string): string => {
+  if (!url) return url;
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `http://${url}`;
+};
+
 const Projects = () => {
   const [filter, setFilter] = useState<"all" | "completed" | "in-progress">(
     "all",
@@ -231,6 +240,20 @@ const Projects = () => {
               >
                 <FiGithub />
                 GitHub
+              </motion.a>
+            )}
+            {project.site && (
+              <motion.a
+                href={normalizeUrl(project.site)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+              >
+                <FiExternalLink />
+                사이트
               </motion.a>
             )}
             {project.demo && (
@@ -568,6 +591,19 @@ const Projects = () => {
                 >
                   <FiGithub className="w-5 h-5" />
                   GitHub Repository
+                </motion.a>
+              )}
+              {project.site && (
+                <motion.a
+                  href={normalizeUrl(project.site)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
+                >
+                  <FiExternalLink className="w-5 h-5" />
+                  사이트 주소
                 </motion.a>
               )}
               {project.demo && (
