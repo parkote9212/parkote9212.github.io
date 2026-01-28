@@ -114,11 +114,11 @@ export const projects: Project[] = [
       "JPA + MyBatis 하이브리드 데이터 접근 계층 설계",
       "AOP 기반 로깅 및 트랜잭션 관리",
     ],
-    github: "https://github.com/fitness-team-project/fitneeds",
-    docs: "www.naver.com",
+    github: "https://github.com/parkote9212/fitneeds",
+    docs: "https://www.notion.so/FITNEES-2f6800a6a897805f80a4dacc92d7fc57?source=copy_link",
     status: "in-progress",
     featured: false,
-    period: "2025.11 - 현재",
+    period: "2025.11 - 2026.01",
   },
 ];
 
