@@ -58,6 +58,37 @@ export const projects: Project[] = [
     period: "2026.01 - 2026.01",
   },
   {
+    id: 3,
+    title: "FitNeeds - 헬스장 이용권 거래 플랫폼 (팀 프로젝트)",
+    description:
+      "헬스장 회원권/이용권 거래 중개 플랫폼. 관리자 페이지에서 예약 관리, 이용권 관리, 상품 관리 등 ERP 기능 담당",
+    tags: [
+      "Spring Boot 3.5",
+      "React 18",
+      "JPA",
+      "MyBatis",
+      "Spring Security",
+      "JWT",
+      "MariaDB",
+      "Bootstrap",
+      "Redux Toolkit",
+    ],
+    role: "팀 프로젝트 - 풀스택 개발 (관리자 시스템)",
+    highlights: [
+      "관리자 백엔드: 예약 관리, 이용권 거래 관리, 이용권 관리, 상품 관리 API 개발",
+      "관리자 프론트: 전체 페이지 구조 설계 및 레이아웃 구성",
+      "공통 CSS 스타일 가이드(erp-common.css) 작성",
+      "JPA + MyBatis 하이브리드 데이터 접근 계층 설계",
+      "AOP 기반 로깅 및 트랜잭션 관리",
+    ],
+    images: ["/images/fitneeds1.gif", "/images/fitneeds2.gif", "/images/fitneeds3.gif"],
+    github: "https://github.com/parkote9212/fitneeds",
+    docs: "https://www.notion.so/FITNEES-2f6800a6a897805f80a4dacc92d7fc57?source=copy_link",
+    status: "completed",
+    featured: false,
+    period: "2025.11 - 2026.01",
+  },
+  {
     id: 2,
     title: "공공 경매 물건 정보 서비스",
     description:
@@ -90,36 +121,7 @@ export const projects: Project[] = [
     featured: false,
     period: "2025.10 - 2025.11",
   },
-  {
-    id: 3,
-    title: "FitNeeds - 헬스장 이용권 거래 플랫폼 (팀 프로젝트)",
-    description:
-      "헬스장 회원권/이용권 거래 중개 플랫폼. 관리자 페이지에서 예약 관리, 이용권 관리, 상품 관리 등 ERP 기능 담당",
-    tags: [
-      "Spring Boot 3.5",
-      "React 18",
-      "JPA",
-      "MyBatis",
-      "Spring Security",
-      "JWT",
-      "MariaDB",
-      "Bootstrap",
-      "Redux Toolkit",
-    ],
-    role: "팀 프로젝트 - 풀스택 개발 (관리자 시스템)",
-    highlights: [
-      "관리자 백엔드: 예약 관리, 이용권 거래 관리, 이용권 관리, 상품 관리 API 개발",
-      "관리자 프론트: 전체 페이지 구조 설계 및 레이아웃 구성",
-      "공통 CSS 스타일 가이드(erp-common.css) 작성",
-      "JPA + MyBatis 하이브리드 데이터 접근 계층 설계",
-      "AOP 기반 로깅 및 트랜잭션 관리",
-    ],
-    github: "https://github.com/parkote9212/fitneeds",
-    docs: "https://www.notion.so/FITNEES-2f6800a6a897805f80a4dacc92d7fc57?source=copy_link",
-    status: "in-progress",
-    featured: false,
-    period: "2025.11 - 2026.01",
-  },
+  
 ];
 
 // 상태별 프로젝트 필터링
