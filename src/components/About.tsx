@@ -90,18 +90,18 @@ const About = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.15,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -50 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
-      x: 0,
+      y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.5,
       },
     },
   } as const;
@@ -118,7 +118,7 @@ const About = () => {
   } as const;
 
   return (
-    <section id="about" className="section bg-white dark:bg-secondary-900">
+    <section id="about" className="section bg-white dark:bg-secondary-900 py-16">
       <div className="section-container">
         {/* Section Title */}
         <motion.div
@@ -126,10 +126,10 @@ const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="section-title">About Me</h2>
-          <p className="text-xl text-secondary-600 dark:text-secondary-300 max-w-2xl mx-auto">
+          <p className="text-lg text-secondary-600 dark:text-secondary-300 max-w-2xl mx-auto">
             다양한 경험을 통해 성장한 개발자의 이야기
           </p>
         </motion.div>
@@ -139,139 +139,206 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-20 text-center"
+          transition={{ duration: 0.6 }}
+          className="mb-10 text-center"
         >
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-primary-50 dark:bg-primary-900/20 rounded-full mb-6">
-            <FiHeart className="text-primary-600 dark:text-primary-400 w-6 h-6" />
-            <h3 className="text-2xl font-bold text-primary-700 dark:text-primary-300">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-primary-50 dark:bg-primary-900/20 rounded-full">
+            <FiHeart className="text-primary-600 dark:text-primary-400 w-5 h-5" />
+            <h3 className="text-xl font-bold text-primary-700 dark:text-primary-300">
               왜 개발자가 되었는가?
             </h3>
           </div>
         </motion.div>
 
-        {/* Timeline */}
-        <div ref={ref} className="relative max-w-4xl mx-auto mb-24">
-          {/* Vertical Line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-200 via-accent-200 to-primary-200 dark:from-primary-800 dark:via-accent-800 dark:to-primary-800" />
+        {/* 타임라인 */}
+        <div ref={ref} className="relative mb-16">
+          {/* SVG 연결선 - 지그재그 */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" style={{ zIndex: 0 }}>
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <polygon points="0 0, 10 3, 0 6" fill="rgb(59, 130, 246)" opacity="0.6" />
+              </marker>
+              <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgb(59, 130, 246)" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="rgb(168, 85, 247)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="rgb(59, 130, 246)" stopOpacity="0.4" />
+              </linearGradient>
+            </defs>
+            
+            {/* 첫 번째 행: 1→2→3 */}
+            <motion.path
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              d="M 8% 60 L 50% 60 L 92% 60"
+              stroke="url(#lineGradient)"
+              strokeWidth="2"
+              fill="none"
+              markerEnd="url(#arrowhead)"
+            />
+            
+            {/* 3↓4 (세로 연결) */}
+            <motion.path
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              d="M 92% 120 Q 92% 180, 92% 180"
+              stroke="url(#lineGradient)"
+              strokeWidth="2"
+              fill="none"
+              markerEnd="url(#arrowhead)"
+            />
+            
+            {/* 두 번째 행: 4←5←6 */}
+            <motion.path
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              d="M 92% 180 L 50% 180 L 8% 180"
+              stroke="url(#lineGradient)"
+              strokeWidth="2"
+              fill="none"
+              markerEnd="url(#arrowhead)"
+            />
+          </svg>
 
+          {/* 타임라인 그리드 */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
-            className="space-y-12"
+            className="relative"
+            style={{ zIndex: 1 }}
           >
-            {timeline.map((item, index) => {
-              const Icon = item.icon;
-              const isEven = index % 2 === 0;
-
-              return (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  className={`relative flex items-center ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                    } flex-row`}
-                >
-                  {/* Content Card */}
-                  <div className={`w-full md:w-5/12 ${isEven ? 'md:pr-12' : 'md:pl-12'} pl-20 md:pl-0`}>
+            {/* 첫 번째 행: 왼쪽→오른쪽 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              {timeline.slice(0, 3).map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="order-1"
+                  >
                     <motion.div
-                      whileHover={{ scale: 1.02, y: -5 }}
-                      className="card p-6 group cursor-pointer"
+                      whileHover={{ scale: 1.05 }}
+                      className="card p-4 group cursor-pointer h-full"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-lg bg-gradient-to-br ${item.color} text-white shadow-lg group-hover:shadow-xl transition-shadow`}>
-                          <Icon className="w-6 h-6" />
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${item.color} text-white shadow-lg group-hover:shadow-xl transition-shadow flex-shrink-0`}>
+                          <Icon className="w-5 h-5" />
                         </div>
-                        <div className="flex-1">
-                          <span className="inline-block px-3 py-1 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-full text-xs font-semibold mb-2">
+                        <div className="flex-1 min-w-0">
+                          <span className="inline-block px-2 py-0.5 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-full text-xs font-semibold mb-1.5">
                             {item.period}
                           </span>
-                          <h3 className="text-xl font-bold text-secondary-900 dark:text-white mb-2">
+                          <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-1.5">
                             {item.title}
                           </h3>
-                          <p className="text-secondary-600 dark:text-secondary-300 leading-relaxed">
+                          <p className="text-sm text-secondary-600 dark:text-secondary-300 leading-relaxed">
                             {item.description}
                           </p>
                         </div>
                       </div>
                     </motion.div>
-                  </div>
+                  </motion.div>
+                );
+              })}
+            </div>
 
-                  {/* Timeline Dot */}
-                  <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2">
+            {/* 두 번째 행: 오른쪽→왼쪽 (역순) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[timeline[5], timeline[4], timeline[3]].map((item, index) => {
+                const Icon = item.icon;
+                const originalIndex = 5 - index; // 원래 인덱스
+                // Grid에서 역순 배치: 첫 번째 아이템을 3번째 위치로, 두 번째를 2번째로, 세 번째를 1번째로
+                const gridOrder = index === 0 ? 3 : index === 1 ? 2 : 1;
+                return (
+                  <motion.div
+                    key={originalIndex}
+                    variants={itemVariants}
+                    style={{ order: gridOrder }}
+                  >
                     <motion.div
-                      initial={{ scale: 0 }}
-                      animate={isInView ? { scale: 1 } : { scale: 0 }}
-                      transition={{ delay: index * 0.2, duration: 0.4 }}
-                      className={`w-4 h-4 rounded-full bg-gradient-to-br ${item.color} shadow-lg ring-4 ring-white dark:ring-secondary-900`}
-                    />
-                  </div>
-
-                  {/* Spacer for alternating layout */}
-                  <div className="hidden md:block md:w-5/12" />
-                </motion.div>
-              );
-            })}
+                      whileHover={{ scale: 1.05 }}
+                      className="card p-4 group cursor-pointer h-full"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${item.color} text-white shadow-lg group-hover:shadow-xl transition-shadow flex-shrink-0`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="inline-block px-2 py-0.5 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-full text-xs font-semibold mb-1.5">
+                            {item.period}
+                          </span>
+                          <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-1.5">
+                            {item.title}
+                          </h3>
+                          <p className="text-sm text-secondary-600 dark:text-secondary-300 leading-relaxed">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </motion.div>
         </div>
 
-        {/* Strengths Section */}
+        {/* 나만의 강점 섹션 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          className="mb-10"
         >
-          <h3 className="text-3xl font-bold gradient-text mb-4">
-            나만의 강점
-          </h3>
-          <p className="text-lg text-secondary-600 dark:text-secondary-300">
-            경험을 통해 얻은 핵심 역량
-          </p>
-        </motion.div>
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold gradient-text mb-2">
+              나만의 강점
+            </h3>
+            <p className="text-sm text-secondary-600 dark:text-secondary-300">
+              경험을 통해 얻은 핵심 역량
+            </p>
+          </div>
 
-        {/* Strengths Cards */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
-        >
-          {strengths.map((strength, index) => {
-            const Icon = strength.icon;
-            return (
-              <motion.div
-                key={index}
-                variants={cardVariants}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="card p-8 text-center group cursor-pointer"
-              >
-                {/* Icon with Gradient Background */}
-                <div className="mb-6 flex justify-center">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${strength.gradient} text-white shadow-lg group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110`}>
-                    <Icon className="w-8 h-8" />
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h4 className="text-2xl font-bold text-secondary-900 dark:text-white mb-4">
-                  {strength.title}
-                </h4>
-
-                {/* Description */}
-                <p className="text-secondary-600 dark:text-secondary-300 leading-relaxed">
-                  {strength.description}
-                </p>
-
-                {/* Bottom Accent Line */}
+          {/* Strengths Cards */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+          >
+            {strengths.map((strength, index) => {
+              const Icon = strength.icon;
+              return (
                 <motion.div
-                  className={`mt-6 h-1 w-0 group-hover:w-full mx-auto rounded-full bg-gradient-to-r ${strength.gradient} transition-all duration-500`}
-                />
-              </motion.div>
-            );
-          })}
+                  key={index}
+                  variants={cardVariants}
+                  whileHover={{ scale: 1.02 }}
+                  className="card p-4 group cursor-pointer"
+                >
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className={`p-2 rounded-lg bg-gradient-to-br ${strength.gradient} text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h4 className="text-base font-bold text-secondary-900 dark:text-white pt-0.5">
+                      {strength.title}
+                    </h4>
+                  </div>
+                  <p className="text-sm text-secondary-600 dark:text-secondary-300 leading-relaxed pl-11">
+                    {strength.description}
+                  </p>
+                  <motion.div
+                    className={`mt-2 h-1 w-0 group-hover:w-full rounded-full bg-gradient-to-r ${strength.gradient} transition-all duration-500`}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </motion.div>
 
         {/* Closing Quote */}
@@ -279,16 +346,16 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-20 text-center max-w-3xl mx-auto"
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto"
         >
-          <div className="relative p-8 glass rounded-2xl">
-            <div className="absolute top-4 left-4 text-6xl text-primary-300 dark:text-primary-700 opacity-50">"</div>
-            <p className="text-xl md:text-2xl font-medium text-secondary-700 dark:text-secondary-200 italic leading-relaxed relative z-10">
+          <div className="relative p-6 glass rounded-xl">
+            <div className="absolute top-2 left-3 text-4xl text-primary-300 dark:text-primary-700 opacity-50">"</div>
+            <p className="text-base md:text-lg font-medium text-secondary-700 dark:text-secondary-200 italic leading-relaxed relative z-10 px-4">
               다양한 경험은 제게 넓은 시야를 주었고,<br />
               개발은 그 경험들을 현실로 만드는 도구입니다.
             </p>
-            <div className="absolute bottom-4 right-4 text-6xl text-primary-300 dark:text-primary-700 opacity-50">"</div>
+            <div className="absolute bottom-2 right-3 text-4xl text-primary-300 dark:text-primary-700 opacity-50">"</div>
           </div>
         </motion.div>
       </div>

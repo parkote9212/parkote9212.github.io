@@ -1,10 +1,10 @@
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, type Variants } from 'framer-motion';
 import { useRef } from 'react';
 import type { ReactNode } from 'react';
 
 interface ScrollRevealProps {
   children: ReactNode;
-  variants?: any;
+  variants?: Variants;
   delay?: number;
   className?: string;
 }

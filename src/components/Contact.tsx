@@ -41,7 +41,7 @@ const Contact = () => {
         setStatus('error');
         setTimeout(() => setStatus('idle'), 5000);
       }
-    } catch (error) {
+    } catch {
       setStatus('error');
       setTimeout(() => setStatus('idle'), 5000);
     }
@@ -103,7 +103,7 @@ const Contact = () => {
               className="space-y-8"
             >
               {/* Introduction */}
-              <motion.div variants={itemVariants as any}>
+              <motion.div variants={itemVariants}>
                 <h3 className="text-2xl font-bold text-secondary-900 dark:text-white mb-4">
                   함께 일하고 싶으신가요?
                 </h3>
