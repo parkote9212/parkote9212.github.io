@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { FiStar } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiStar, FiChevronDown } from "react-icons/fi";
 import {
   getLevelText,
   getProgressBarColor,
@@ -11,11 +11,34 @@ import {
 
 const TechStack = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [showAllMobile, setShowAllMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const categories = Object.entries(skillCategories);
 
   const filteredSkills =
     selectedCategory === "all" ? skills : getSkillsByCategory(selectedCategory);
+
+  // 모바일에서 초기 6개만 표시, PC는 전체 표시
+  const displaySkills = isMobile && !showAllMobile 
+    ? filteredSkills.slice(0, 6) 
+    : filteredSkills;
+
+  // 카테고리 변경 핸들러 (모바일 "더 보기" 상태도 함께 리셋)
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setShowAllMobile(false);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -81,7 +104,7 @@ const TechStack = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setSelectedCategory("all")}
+            onClick={() => handleCategoryChange("all")}
             className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${selectedCategory === "all"
                 ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                 : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
@@ -99,7 +122,7 @@ const TechStack = () => {
                 key={key}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategory(key)}
+                onClick={() => handleCategoryChange(key)}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${selectedCategory === key
                     ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
                     : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
@@ -143,36 +166,37 @@ const TechStack = () => {
         </AnimatePresence>
 
         {/* Skills Grid */}
-        <motion.div
-          key={selectedCategory}
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-        >
-          {filteredSkills.map((skill, index) => {
-            const Icon = skill.icon;
-            const progressColor = getProgressBarColor(skill.level);
-            const levelText = getLevelText(skill.level);
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedCategory}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 max-w-6xl mx-auto"
+          >
+            {displaySkills.map((skill, index) => {
+              const Icon = skill.icon;
+              const progressColor = getProgressBarColor(skill.level);
+              const levelText = getLevelText(skill.level);
 
-            return (
-              <motion.div
-                key={`${skill.name}-${index}`}
-                variants={itemVariants}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="card p-6 group cursor-pointer"
-              >
+              return (
+                <motion.div
+                  key={`${skill.name}-${selectedCategory}-${index}`}
+                  variants={itemVariants}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="card p-4 md:p-6 group cursor-pointer"
+                >
                 {/* Header: Icon + Name + Level */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <div className="relative">
                       <Icon
-                        className={`w-10 h-10 ${skill.color} group-hover:scale-110 transition-transform duration-300`}
+                        className={`w-8 h-8 md:w-10 md:h-10 ${skill.color} group-hover:scale-110 transition-transform duration-300`}
                       />
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-secondary-900 dark:text-white">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base md:text-lg font-bold text-secondary-900 dark:text-white truncate">
                         {skill.name}
                       </h3>
                       <span className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -184,8 +208,8 @@ const TechStack = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <div className="text-xl md:text-2xl font-bold text-primary-600 dark:text-primary-400">
                       {skill.level}%
                     </div>
                     <div className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -195,23 +219,39 @@ const TechStack = () => {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+                <div className="mb-3 md:mb-4">
+                  <div className="h-1.5 md:h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
                     <motion.div
+                      key={`progress-${skill.name}-${selectedCategory}`}
                       initial={{ width: 0 }}
-                      whileInView={{ width: `${skill.level}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: index * 0.1 }}
-                      className={`h-full ${progressColor} rounded-full relative`}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ 
+                        duration: 1.2, 
+                        delay: index * 0.08,
+                        ease: [0.43, 0.13, 0.23, 0.96] // 부드러운 ease-out
+                      }}
+                      className={`h-full ${progressColor} rounded-full relative overflow-hidden`}
                     >
-                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                      {/* 차오르는 효과를 위한 그라디언트 */}
+                      <motion.div
+                        key={`shine-${skill.name}-${selectedCategory}`}
+                        initial={{ x: '-100%' }}
+                        animate={{ x: '100%' }}
+                        transition={{
+                          duration: 1.5,
+                          delay: index * 0.08 + 0.3,
+                          ease: 'easeInOut',
+                          repeat: 0
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      />
                     </motion.div>
                   </div>
                 </div>
 
-                {/* Description */}
+                {/* Description - 모바일에서 숨김 */}
                 {skill.description && (
-                  <p className="text-sm text-secondary-600 dark:text-secondary-300 leading-relaxed">
+                  <p className="hidden md:block text-sm text-secondary-600 dark:text-secondary-300 leading-relaxed">
                     {skill.description}
                   </p>
                 )}
@@ -221,7 +261,28 @@ const TechStack = () => {
               </motion.div>
             );
           })}
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* 모바일 "더 보기" 버튼 */}
+        {isMobile && filteredSkills.length > 6 && !showAllMobile && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-6 flex justify-center"
+          >
+            <motion.button
+              onClick={() => setShowAllMobile(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-500 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <span>더 보기 ({filteredSkills.length - 6}개)</span>
+              <FiChevronDown className="w-5 h-5" />
+            </motion.button>
+          </motion.div>
+        )}
 
         {/* Stats Summary */}
         <motion.div

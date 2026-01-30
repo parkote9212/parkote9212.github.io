@@ -38,6 +38,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* 모바일 터치 반응 개선 (300ms 지연 제거) */
+    touch-action: manipulation;
   }
 
   body {
@@ -78,9 +80,10 @@
 }
 
 @layer components {
-  /* 섹션 공통 스타일 */
+  /* 섹션 공통 스타일 - scroll-margin으로 고정 네비게이션 오프셋 */
   .section {
     @apply py-20 px-4 md:px-8 lg:px-16;
+    scroll-margin-top: 5rem; /* navbar 높이(80px) */
   }
 
   .section-container {

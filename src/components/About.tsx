@@ -153,7 +153,7 @@ const About = () => {
         {/* 타임라인 */}
         <div ref={ref} className="relative mb-16">
           {/* SVG 연결선 - 지그재그 */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" style={{ zIndex: 0 }}>
+          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 100 200" preserveAspectRatio="none" style={{ zIndex: 0 }}>
             <defs>
               <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
                 <polygon points="0 0, 10 3, 0 6" fill="rgb(59, 130, 246)" opacity="0.6" />
@@ -170,7 +170,7 @@ const About = () => {
               initial={{ pathLength: 0, opacity: 0 }}
               animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              d="M 8% 60 L 50% 60 L 92% 60"
+              d="M 8 60 L 50 60 L 92 60"
               stroke="url(#lineGradient)"
               strokeWidth="2"
               fill="none"
@@ -182,7 +182,7 @@ const About = () => {
               initial={{ pathLength: 0, opacity: 0 }}
               animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              d="M 92% 120 Q 92% 180, 92% 180"
+              d="M 92 120 L 92 180"
               stroke="url(#lineGradient)"
               strokeWidth="2"
               fill="none"
@@ -194,7 +194,7 @@ const About = () => {
               initial={{ pathLength: 0, opacity: 0 }}
               animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              d="M 92% 180 L 50% 180 L 8% 180"
+              d="M 92 180 L 50 180 L 8 180"
               stroke="url(#lineGradient)"
               strokeWidth="2"
               fill="none"

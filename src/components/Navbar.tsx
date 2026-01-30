@@ -43,21 +43,57 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Smooth scroll
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  // 내부 앵커 링크: 확실한 스크롤 처리
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith('#')) return;
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80; // navbar 높이
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
 
+    // 모바일 메뉴 닫기
+    setIsOpen(false);
+
+    const scrollToSection = () => {
+      const el = document.getElementById(href.substring(1)); // # 제거
+      if (!el) {
+        // querySelector로 재시도
+        const el2 = document.querySelector(href);
+        if (!el2) return false;
+        const rect = el2.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const targetY = rect.top + scrollTop - 80; // navbar 높이
+        
+        window.scrollTo({
+          top: Math.max(0, targetY),
+          behavior: 'smooth',
+        });
+        return true;
+      }
+      
+      // getElementById로 찾은 경우
+      const rect = el.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const targetY = rect.top + scrollTop - 80; // navbar 높이
+      
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, targetY),
         behavior: 'smooth',
       });
-    }
-    setIsOpen(false);
+      return true;
+    };
+
+    // 약간의 지연 후 스크롤 (메뉴 닫힘 애니메이션 후)
+    setTimeout(() => {
+      if (!scrollToSection()) {
+        // lazy 로딩 대기
+        let attempts = 0;
+        const maxAttempts = 40;
+        const retryInterval = setInterval(() => {
+          attempts++;
+          if (scrollToSection() || attempts >= maxAttempts) {
+            clearInterval(retryInterval);
+          }
+        }, 50);
+      }
+    }, 100);
   };
 
   return (
@@ -89,7 +125,7 @@ const Navbar = () => {
               <motion.a
                 key={item.name}
                 href={item.href}
-                onClick={(e) => handleClick(e, item.href)}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className={`relative text-sm font-medium transition-colors ${
                   activeSection === item.href
                     ? 'text-primary-600 dark:text-primary-400'
@@ -129,7 +165,7 @@ const Navbar = () => {
             {/* Blog/Resume */}
             <motion.a
               href="#resume"
-              onClick={(e) => handleClick(e, '#resume')}
+              onClick={(e) => handleNavClick(e, '#resume')}
               className="text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               whileHover={{ scale: 1.1, rotate: -5 }}
               whileTap={{ scale: 0.9 }}
@@ -185,7 +221,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - 터치 친화적 (최소 44px 터치 영역) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -193,48 +229,69 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white dark:bg-secondary-900 border-t border-secondary-200 dark:border-secondary-700"
+            className="md:hidden bg-white dark:bg-secondary-900 border-t border-secondary-200 dark:border-secondary-700 overflow-visible"
+            style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-6 space-y-1">
               {menuItems.map((item, index) => (
-                <motion.a
+                <motion.div
                   key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleClick(e, item.href)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`block text-base font-medium transition-colors ${
-                    activeSection === item.href
-                      ? 'text-primary-600 dark:text-primary-400'
-                      : 'text-secondary-700 dark:text-secondary-300'
-                  }`}
+                  transition={{ delay: index * 0.05 }}
                 >
-                  {item.name}
-                </motion.a>
+                  <a
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    onTouchEnd={(e) => handleNavClick(e, item.href)}
+                    style={{ 
+                      touchAction: 'manipulation', 
+                      minHeight: 44,
+                      display: 'flex',
+                      alignItems: 'center',
+                      WebkitTapHighlightColor: 'transparent'
+                    }}
+                    className={`py-3 px-2 -mx-2 text-base font-medium transition-colors rounded-lg active:bg-secondary-100 dark:active:bg-secondary-800 cursor-pointer ${
+                      activeSection === item.href
+                        ? 'text-primary-600 dark:text-primary-400'
+                        : 'text-secondary-700 dark:text-secondary-300'
+                    }`}
+                  >
+                    {item.name}
+                  </a>
+                </motion.div>
               ))}
 
               {/* Mobile Social Links */}
-              <div className="flex items-center space-x-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex items-center gap-2 pt-4 mt-4 border-t border-secondary-200 dark:border-secondary-700">
                 <motion.a
                   href="https://github.com/parkote9212"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  style={{ touchAction: 'manipulation', minHeight: 44 }}
+                  className="flex items-center justify-center min-w-[44px] py-3 px-4 space-x-2 text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg active:bg-secondary-100 dark:active:bg-secondary-800"
                   whileTap={{ scale: 0.95 }}
                 >
                   <FiGithub size={20} />
                   <span className="text-sm">GitHub</span>
                 </motion.a>
-                <motion.a
+                <a
                   href="#resume"
-                  onClick={(e) => handleClick(e, '#resume')}
-                  className="flex items-center space-x-2 text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => handleNavClick(e, '#resume')}
+                  onTouchEnd={(e) => handleNavClick(e, '#resume')}
+                  style={{ 
+                    touchAction: 'manipulation', 
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
+                  className="min-w-[44px] py-3 px-4 space-x-2 text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg active:bg-secondary-100 dark:active:bg-secondary-800 cursor-pointer"
                 >
                   <FiFileText size={20} />
                   <span className="text-sm">Resume</span>
-                </motion.a>
+                </a>
               </div>
             </div>
           </motion.div>
