@@ -187,19 +187,19 @@ const TechStack = () => {
                   whileHover={{ y: -8, scale: 1.02 }}
                   className="card p-4 md:p-6 group cursor-pointer"
                 >
-                {/* Header: Icon + Name + Level */}
-                <div className="flex items-center justify-between mb-3 md:mb-4">
-                  <div className="flex items-center gap-2 md:gap-3">
-                    <div className="relative">
+                {/* Header: Icon + Name + Level (모바일에서 긴 이름 시 퍼센트 영역 보존) */}
+                <div className="flex items-center justify-between gap-2 mb-3 md:mb-4 min-w-0">
+                  <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1 overflow-hidden">
+                    <div className="relative flex-shrink-0">
                       <Icon
                         className={`w-8 h-8 md:w-10 md:h-10 ${skill.color} group-hover:scale-110 transition-transform duration-300`}
                       />
                     </div>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 overflow-hidden">
                       <h3 className="text-base md:text-lg font-bold text-secondary-900 dark:text-white truncate">
                         {skill.name}
                       </h3>
-                      <span className="text-xs text-secondary-500 dark:text-secondary-400">
+                      <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate block">
                         {
                           skillCategories[
                             skill.category as keyof typeof skillCategories
@@ -208,8 +208,8 @@ const TechStack = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0 ml-2">
-                    <div className="text-xl md:text-2xl font-bold text-primary-600 dark:text-primary-400">
+                  <div className="text-right flex-shrink-0 whitespace-nowrap ml-1">
+                    <div className="text-xl md:text-2xl font-bold text-primary-600 dark:text-primary-400 tabular-nums">
                       {skill.level}%
                     </div>
                     <div className="text-xs text-secondary-500 dark:text-secondary-400">

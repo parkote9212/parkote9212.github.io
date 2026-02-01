@@ -12,6 +12,7 @@ import {
   SiJavascript,
   SiLinux,
   SiMariadb,
+  SiPython,
   SiReact,
   SiSpring,
   SiSpringboot,
@@ -91,6 +92,14 @@ export const skills: Skill[] = [
     category: "backend",
     color: "text-red-600",
     description: "객체지향 설계, 디자인 패턴, Morden Java 17/21 기능 활용",
+  },
+  {
+    name: "Python",
+    level: 65,
+    icon: SiPython,
+    category: "backend",
+    color: "text-blue-500",
+    description: "FastAPI 기반 백엔드 개발, AST 파싱, 벡터 데이터베이스 연동",
   },
   {
     name: "Spring Framework",

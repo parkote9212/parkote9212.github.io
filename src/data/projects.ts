@@ -121,7 +121,44 @@ export const projects: Project[] = [
     featured: false,
     period: "2025.10 - 2025.11",
   },
-  
+  {
+    id: 4,
+    title: "Codebase Q&A - RAG 기반 코드 분석 시스템",
+    description:
+      "로컬 LLM(Ollama)과 벡터 데이터베이스(ChromaDB)를 활용한 개인 코드베이스 분석 및 자연어 질의응답 시스템. FastAPI 백엔드와 Vue 3 프론트엔드로 구성된 RAG 파이프라인",
+    tags: [
+      "Python 3.11",
+      "FastAPI",
+      "Vue 3",
+      "Ollama",
+      "ChromaDB",
+      "RAG",
+      "sentence-transformers",
+      "Pinia",
+      "Tailwind CSS v4",
+      "Vite",
+      "SSE",
+      "highlight.js",
+    ],
+    role: "개인 프로젝트 (풀스택)",
+    highlights: [
+      "RAG(Retrieval-Augmented Generation) 파이프라인 설계 및 구현 (벡터 검색 + LLM 생성)",
+      "ChromaDB 벡터 데이터베이스로 코드 임베딩 저장 및 유사도 검색 (all-MiniLM-L6-v2)",
+      "Ollama 로컬 LLM 연동 및 스트리밍 응답 구현 (qwen2.5:3b)",
+      "Python AST 기반 코드 파싱 (Java/Python/Vue/JavaScript) 및 청킹 전략",
+      "SSE(Server-Sent Events)로 실시간 스트리밍 답변 구현",
+      "Vue 3 Composition API + Pinia 상태 관리 (채팅 세션·테마 관리)",
+      "Tailwind CSS v4 (@tailwindcss/postcss) 기반 다크/라이트 모드",
+      "마크다운 내보내기 및 클립보드 복사 기능 (대화 기록 관리)",
+      "프로젝트별 인덱싱 진행률 추적 및 취소 기능 (Thread Lock + 전역 상태)",
+      "highlight.js로 코드 블록 신택스 하이라이팅 및 복사 기능",
+    ],
+    github: "https://github.com/parkote9212/codebase-qa",
+    docs: "https://www.notion.so/CODEBASE-QA-2fa800a6a897805caa19e8a3bbc1efe1?source=copy_link",
+    status: "completed",
+    featured: true,
+    period: "2026.02 - 2026.02",
+  },
 ];
 
 // 상태별 프로젝트 필터링
@@ -219,6 +256,30 @@ export const tagColors: { [key: string]: string } = {
     "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
   "GitHub Actions":
     "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400",
+  "Python 3.11":
+    "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
+  FastAPI:
+    "bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400",
+  "Vue 3":
+    "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+  Ollama:
+    "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+  ChromaDB:
+    "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
+  RAG:
+    "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
+  "sentence-transformers":
+    "bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400",
+  Pinia:
+    "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
+  "Tailwind CSS v4":
+    "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400",
+  Vite:
+    "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+  SSE:
+    "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
+  "highlight.js":
+    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400",
 };
 
 // 태그 색상 가져오기 (기본값 포함)
