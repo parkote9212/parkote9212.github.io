@@ -15,6 +15,9 @@ import {
   HiOutlineShieldCheck,
 } from 'react-icons/hi';
 
+/**
+ * About 섹션. 타임라인(경력/학력 흐름)과 강점 카드를 스크롤 시 애니메이션으로 표시합니다.
+ */
 const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });

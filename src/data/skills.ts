@@ -158,7 +158,7 @@ export const skills: Skill[] = [
     level: 55,
     icon: SiLinux,
     category: "devops",
-    color: "text-gray-800",
+    color: "text-gray-800 dark:text-yellow-300",
     description: "셸 스크립트, 시스템 관리, 권한 제어 및 프로세스 관리",
   },
   {
@@ -190,7 +190,7 @@ export const skills: Skill[] = [
     level: 75,
     icon: SiGithub,
     category: "devops",
-    color: "text-gray-800",
+    color: "text-gray-800 dark:text-gray-100",
     description: "PR 리뷰, 이슈 추적, CI/CD 자동화, 팀 협업 워크플로우",
   },
 

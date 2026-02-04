@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { FiGithub, FiArrowUp, FiMail } from 'react-icons/fi';
 import { SiReact, SiTypescript, SiTailwindcss } from 'react-icons/si';
 
+/**
+ * 푸터. 브랜드, Quick Links, 기술 스택, 상단 스크롤 버튼, 저작권을 표시합니다.
+ */
 const Footer = () => {
+  /** 페이지 최상단으로 스무스 스크롤 */
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FiStar, FiChevronDown } from "react-icons/fi";
 import {
   getLevelText,
@@ -8,69 +8,60 @@ import {
   skillCategories,
   skills,
 } from "../data/skills";
+import { staggerContainer, staggerItem, scaleIn } from "../utils/animations";
 
+/** 카테고리 필터/요약에 사용하는 [key, category] 목록 (한 번만 계산) */
+const CATEGORIES = Object.entries(skillCategories);
+
+/** 모바일 브레이크포인트 (px) */
+const MOBILE_BREAKPOINT = 768;
+
+/** resize 후 이 시간(ms) 지나면 한 번만 isMobile 갱신 */
+const RESIZE_DEBOUNCE_MS = 200;
+
+/**
+ * 기술 스택 섹션. 카테고리 필터(All/Frontend/Backend 등), 스킬 카드 그리드, 모바일 "더 보기", 카테고리별 평균 통계를 표시합니다.
+ */
 const TechStack = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [showAllMobile, setShowAllMobile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // 모바일 감지
+  /** 모바일 여부 감지 (resize 디바운스 적용) */
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkMobile, RESIZE_DEBOUNCE_MS);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  const categories = Object.entries(skillCategories);
+  const filteredSkills = useMemo(
+    () =>
+      selectedCategory === "all" ? skills : getSkillsByCategory(selectedCategory),
+    [selectedCategory],
+  );
 
-  const filteredSkills =
-    selectedCategory === "all" ? skills : getSkillsByCategory(selectedCategory);
+  /** 모바일에서 초기 6개만 표시, PC는 전체 표시 */
+  const displaySkills =
+    isMobile && !showAllMobile ? filteredSkills.slice(0, 6) : filteredSkills;
 
-  // 모바일에서 초기 6개만 표시, PC는 전체 표시
-  const displaySkills = isMobile && !showAllMobile 
-    ? filteredSkills.slice(0, 6) 
-    : filteredSkills;
-
-  // 카테고리 변경 핸들러 (모바일 "더 보기" 상태도 함께 리셋)
+  /** 카테고리 변경 시 선택값 갱신 및 모바일 "더 보기" 리셋 */
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setShowAllMobile(false);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  } as const;
-
-  const categoryVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-      },
-    },
-  } as const;
+  const containerVariants = staggerContainer(0.1);
 
   return (
     <section
@@ -115,7 +106,7 @@ const TechStack = () => {
           </motion.button>
 
           {/* Category Buttons */}
-          {categories.map(([key, category]) => {
+          {CATEGORIES.map(([key, category]) => {
             const Icon = category.icon;
             return (
               <motion.button
@@ -183,7 +174,7 @@ const TechStack = () => {
               return (
                 <motion.div
                   key={`${skill.name}-${selectedCategory}-${index}`}
-                  variants={itemVariants}
+                  variants={staggerItem}
                   whileHover={{ y: -8, scale: 1.02 }}
                   className="card p-4 md:p-6 group cursor-pointer"
                 >
@@ -292,7 +283,7 @@ const TechStack = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 grid grid-cols-2 md:grid-cols-5 gap-6 max-w-4xl mx-auto"
         >
-          {categories.map(([key, category]) => {
+          {CATEGORIES.map(([key, category]) => {
             const categorySkills = getSkillsByCategory(key);
             const avgLevel = Math.round(
               categorySkills.reduce((sum, skill) => sum + skill.level, 0) /
@@ -303,7 +294,7 @@ const TechStack = () => {
             return (
               <motion.div
                 key={key}
-                variants={categoryVariants}
+                variants={scaleIn}
                 whileHover={{ scale: 1.05 }}
                 className="card p-4 text-center"
               >

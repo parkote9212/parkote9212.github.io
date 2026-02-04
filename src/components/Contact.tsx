@@ -2,6 +2,9 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FiAlertCircle, FiCheck, FiGithub, FiMail, FiSend } from 'react-icons/fi';
 
+/**
+ * Contact 섹션. Formspree 연동 문의 폼과 상태(idle/loading/success/error)를 처리합니다.
+ */
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -10,11 +13,14 @@ const Contact = () => {
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
+  /**
+   * Formspree API로 폼 전송. VITE_FORMSPREE_ID가 없으면 에러 처리 후 5초 뒤 idle로 복귀합니다.
+   * @param e - 폼 submit 이벤트
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
 
-    // Formspree 연동
     const formId = import.meta.env.VITE_FORMSPREE_ID;
     
     if (!formId || formId === 'YOUR_FORM_ID') {
@@ -47,6 +53,7 @@ const Contact = () => {
     }
   };
 
+  /** 제어 컴포넌트용 입력 변경 핸들러 (name, email, message) */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,

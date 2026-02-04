@@ -23,15 +23,20 @@ import {
   projects,
 } from "../data/projects";
 
-// URL에 프로토콜이 없으면 자동으로 http:// 추가
+/**
+ * URL에 프로토콜이 없으면 `http://`를 붙여 반환합니다.
+ * @param url - 대상 URL
+ * @returns 프로토콜이 포함된 URL
+ */
 const normalizeUrl = (url: string): string => {
   if (!url) return url;
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
   return `http://${url}`;
 };
 
+/**
+ * 프로젝트 섹션. 상태 필터(전체/완료/진행중), 카드 그리드, 모달 상세를 표시합니다.
+ */
 const Projects = () => {
   const [filter, setFilter] = useState<"all" | "completed" | "in-progress">(
     "all",
@@ -98,6 +103,7 @@ const Projects = () => {
     exit: { opacity: 0 },
   };
 
+  /** 개별 프로젝트 카드 (memo로 불필요 리렌더 방지) */
   const ProjectCard = memo(({ project }: { project: Project }) => {
     return (
       <motion.div

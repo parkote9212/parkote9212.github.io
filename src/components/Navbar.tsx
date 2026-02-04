@@ -1,100 +1,103 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiGithub, FiFileText } from 'react-icons/fi';
 import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
 import { useTheme } from '../context/ThemeContext';
 
+/** 네비게이션 메뉴 항목 (이름 + 앵커) */
+const MENU_ITEMS = [
+  { name: 'About', href: '#about' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Resume', href: '#resume' },
+  { name: 'Contact', href: '#contact' },
+] as const;
+
+/** 스크롤 시 활성 섹션 판별에 사용하는 id 목록 */
+const SECTION_IDS = ['about', 'skills', 'projects', 'resume', 'contact'];
+
+/** 네비 높이만큼 오프셋 (px) */
+const NAV_OFFSET = 80;
+
+/**
+ * 앵커 href(#id)에 해당하는 요소로 스무스 스크롤합니다.
+ * getElementById 실패 시 querySelector로 재시도합니다.
+ *
+ * @param href - '#sectionId' 형태의 앵커
+ * @returns 스크롤 성공 여부
+ */
+function scrollToSection(href: string): boolean {
+  const id = href.startsWith('#') ? href.slice(1) : href;
+  const el = document.getElementById(id) ?? document.querySelector(href);
+  if (!el) return false;
+
+  const rect = el.getBoundingClientRect();
+  const scrollTop = window.pageYOffset ?? document.documentElement.scrollTop;
+  const targetY = rect.top + scrollTop - NAV_OFFSET;
+
+  window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+  return true;
+}
+
+/**
+ * 상단 고정 네비게이션. 스크롤 시 배경/블러 적용, 앵커 메뉴 활성 표시, 다크모드 토글, 모바일 햄버거 메뉴를 제공합니다.
+ */
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const { isDark, toggleTheme } = useTheme();
 
-  const menuItems = [
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Resume', href: '#resume' },
-    { name: 'Contact', href: '#contact' },
-   
-  ];
-
-  // 스크롤 감지
+  /** 스크롤 시 스크롤 여부·활성 섹션 업데이트 (requestAnimationFrame으로 쓰로틀) */
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    let ticking = false;
 
-      // 현재 활성 섹션 감지
-      const sections = ['about', 'skills', 'projects',  'resume','contact'];
-      const current = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 50);
+
+        const current = SECTION_IDS.find((id) => {
+          const el = document.getElementById(id);
+          if (!el) return false;
+          const rect = el.getBoundingClientRect();
           return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
+        });
+        if (current) setActiveSection(`#${current}`);
+        ticking = false;
       });
-      if (current) {
-        setActiveSection(`#${current}`);
-      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 내부 앵커 링크: 확실한 스크롤 처리
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, href: string) => {
-    if (!href.startsWith('#')) return;
-    e.preventDefault();
+  /**
+   * 앵커 클릭 시 메뉴를 닫고 해당 섹션으로 스크롤. lazy 로딩된 섹션은 재시도합니다.
+   * @param e - 클릭/터치 이벤트
+   * @param href - '#sectionId'
+   */
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, href: string) => {
+      if (!href.startsWith('#')) return;
+      e.preventDefault();
+      setIsOpen(false);
 
-    // 모바일 메뉴 닫기
-    setIsOpen(false);
-
-    const scrollToSection = () => {
-      const el = document.getElementById(href.substring(1)); // # 제거
-      if (!el) {
-        // querySelector로 재시도
-        const el2 = document.querySelector(href);
-        if (!el2) return false;
-        const rect = el2.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-        const targetY = rect.top + scrollTop - 80; // navbar 높이
-        
-        window.scrollTo({
-          top: Math.max(0, targetY),
-          behavior: 'smooth',
-        });
-        return true;
-      }
-      
-      // getElementById로 찾은 경우
-      const rect = el.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-      const targetY = rect.top + scrollTop - 80; // navbar 높이
-      
-      window.scrollTo({
-        top: Math.max(0, targetY),
-        behavior: 'smooth',
-      });
-      return true;
-    };
-
-    // 약간의 지연 후 스크롤 (메뉴 닫힘 애니메이션 후)
-    setTimeout(() => {
-      if (!scrollToSection()) {
-        // lazy 로딩 대기
+      const runAfterDelay = () => {
+        if (scrollToSection(href)) return;
         let attempts = 0;
         const maxAttempts = 40;
-        const retryInterval = setInterval(() => {
+        const id = setInterval(() => {
           attempts++;
-          if (scrollToSection() || attempts >= maxAttempts) {
-            clearInterval(retryInterval);
-          }
+          if (scrollToSection(href) || attempts >= maxAttempts) clearInterval(id);
         }, 50);
-      }
-    }, 100);
-  };
+      };
+
+      setTimeout(runAfterDelay, 100);
+    },
+    [],
+  );
 
   return (
     <motion.nav
@@ -109,7 +112,6 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
           <motion.a
             href="#"
             className="text-2xl font-bold gradient-text"
@@ -119,9 +121,8 @@ const Navbar = () => {
             GC Park
           </motion.a>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            {menuItems.map((item) => (
+            {MENU_ITEMS.map((item) => (
               <motion.a
                 key={item.name}
                 href={item.href}
@@ -147,9 +148,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right Icons */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* GitHub */}
             <motion.a
               href="https://github.com/parkote9212"
               target="_blank"
@@ -162,7 +161,6 @@ const Navbar = () => {
               <FiGithub size={22} />
             </motion.a>
 
-            {/* Blog/Resume */}
             <motion.a
               href="#resume"
               onClick={(e) => handleNavClick(e, '#resume')}
@@ -174,7 +172,6 @@ const Navbar = () => {
               <FiFileText size={22} />
             </motion.a>
 
-            {/* Dark Mode Toggle */}
             <motion.button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-secondary-200 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-300 dark:hover:bg-secondary-600 transition-colors"
@@ -196,9 +193,7 @@ const Navbar = () => {
             </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center space-x-3">
-            {/* Mobile Dark Mode Toggle */}
             <motion.button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-secondary-200 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300"
@@ -208,7 +203,6 @@ const Navbar = () => {
               {isDark ? <HiOutlineSun size={20} /> : <HiOutlineMoon size={20} />}
             </motion.button>
 
-            {/* Hamburger */}
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
@@ -221,7 +215,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu - 터치 친화적 (최소 44px 터치 영역) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -233,7 +226,7 @@ const Navbar = () => {
             style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}
           >
             <div className="px-4 py-6 space-y-1">
-              {menuItems.map((item, index) => (
+              {MENU_ITEMS.map((item, index) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, x: -20 }}
@@ -244,12 +237,12 @@ const Navbar = () => {
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
                     onTouchEnd={(e) => handleNavClick(e, item.href)}
-                    style={{ 
-                      touchAction: 'manipulation', 
+                    style={{
+                      touchAction: 'manipulation',
                       minHeight: 44,
                       display: 'flex',
                       alignItems: 'center',
-                      WebkitTapHighlightColor: 'transparent'
+                      WebkitTapHighlightColor: 'transparent',
                     }}
                     className={`py-3 px-2 -mx-2 text-base font-medium transition-colors rounded-lg active:bg-secondary-100 dark:active:bg-secondary-800 cursor-pointer ${
                       activeSection === item.href
@@ -262,7 +255,6 @@ const Navbar = () => {
                 </motion.div>
               ))}
 
-              {/* Mobile Social Links */}
               <div className="flex items-center gap-2 pt-4 mt-4 border-t border-secondary-200 dark:border-secondary-700">
                 <motion.a
                   href="https://github.com/parkote9212"
@@ -279,13 +271,13 @@ const Navbar = () => {
                   href="#resume"
                   onClick={(e) => handleNavClick(e, '#resume')}
                   onTouchEnd={(e) => handleNavClick(e, '#resume')}
-                  style={{ 
-                    touchAction: 'manipulation', 
+                  style={{
+                    touchAction: 'manipulation',
                     minHeight: 44,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    WebkitTapHighlightColor: 'transparent'
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                   className="min-w-[44px] py-3 px-4 space-x-2 text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg active:bg-secondary-100 dark:active:bg-secondary-800 cursor-pointer"
                 >

@@ -2,7 +2,15 @@ import { motion } from "framer-motion";
 import { FiArrowDown, FiFileText } from "react-icons/fi";
 import { HiOutlineHandRaised } from "react-icons/hi2";
 
+/**
+ * 히어로 섹션. 메인 타이틀, CTA(프로젝트 보기 / 이력서 보기), 배경 그라디언트 애니메이션을 담습니다.
+ */
 const Hero = () => {
+  /**
+   * 앵커 클릭 시 해당 섹션으로 스무스 스크롤 (네비 오프셋 적용).
+   * @param e - 클릭 이벤트
+   * @param href - '#sectionId'
+   */
   const handleScroll = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
@@ -21,6 +29,7 @@ const Hero = () => {
     }
   };
 
+  /** 외부 이력서(Notion) 링크를 새 탭에서 엽니다. */
   const handleOpenResume = () => {
     window.open(
       "https://unique-flyingfish-69a.notion.site/Resume-2ee800a6a8978019af0cd397ebe53bca?source=copy_link",
