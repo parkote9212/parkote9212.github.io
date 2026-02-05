@@ -13,29 +13,34 @@ import { staggerContainer, staggerItem, scaleIn } from "../utils/animations";
 /** 카테고리 필터/요약에 사용하는 [key, category] 목록 (한 번만 계산) */
 const CATEGORIES = Object.entries(skillCategories);
 
-/** 모바일 브레이크포인트 (px) */
-const MOBILE_BREAKPOINT = 768;
+/** 3열 그리드 시작 (lg, px) */
+const LG_BREAKPOINT = 1024;
 
-/** resize 후 이 시간(ms) 지나면 한 번만 isMobile 갱신 */
+/** 초기 표시: 3줄 분량 (2열=6개, 3열=9개) */
+const ROWS_TO_SHOW = 3;
+
+/** resize 후 이 시간(ms) 지나면 한 번만 gridCols 갱신 */
 const RESIZE_DEBOUNCE_MS = 200;
 
 /**
- * 기술 스택 섹션. 카테고리 필터(All/Frontend/Backend 등), 스킬 카드 그리드, 모바일 "더 보기", 카테고리별 평균 통계를 표시합니다.
+ * 기술 스택 섹션. 카테고리 필터(All/Frontend/Backend 등), 스킬 카드 그리드(초기 3줄만 표시 후 더보기), 카테고리별 평균 통계를 표시합니다.
  */
 const TechStack = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [showAllMobile, setShowAllMobile] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [showAllCards, setShowAllCards] = useState(false);
+  const [gridCols, setGridCols] = useState(2);
 
-  /** 모바일 여부 감지 (resize 디바운스 적용) */
+  /** 그리드 열 수 감지 (2열: ~lg 미만, 3열: lg 이상) — resize 디바운스 적용 */
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    checkMobile();
+    const updateGrid = () => {
+      setGridCols(window.innerWidth >= LG_BREAKPOINT ? 3 : 2);
+    };
+    updateGrid();
 
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkMobile, RESIZE_DEBOUNCE_MS);
+      timeoutId = setTimeout(updateGrid, RESIZE_DEBOUNCE_MS);
     };
 
     window.addEventListener("resize", handleResize);
@@ -51,14 +56,19 @@ const TechStack = () => {
     [selectedCategory],
   );
 
-  /** 모바일에서 초기 6개만 표시, PC는 전체 표시 */
+  /** 초기 표시 개수: 3줄 분량 (2열=6개, 3열=9개) */
+  const initialCount = ROWS_TO_SHOW * gridCols;
+  const hasMore = filteredSkills.length > initialCount;
+  /** 3줄 이후는 숨기고, "더보기" 클릭 시 전체 표시 */
   const displaySkills =
-    isMobile && !showAllMobile ? filteredSkills.slice(0, 6) : filteredSkills;
+    hasMore && !showAllCards
+      ? filteredSkills.slice(0, initialCount)
+      : filteredSkills;
 
-  /** 카테고리 변경 시 선택값 갱신 및 모바일 "더 보기" 리셋 */
+  /** 카테고리 변경 시 선택값 갱신 및 "더 보기" 접기 리셋 */
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setShowAllMobile(false);
+    setShowAllCards(false);
   };
 
   const containerVariants = staggerContainer(0.1);
@@ -255,8 +265,8 @@ const TechStack = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* 모바일 "더 보기" 버튼 */}
-        {isMobile && filteredSkills.length > 6 && !showAllMobile && (
+        {/* 3줄 이후 숨김 → "더 보기" 버튼 */}
+        {hasMore && !showAllCards && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -264,12 +274,12 @@ const TechStack = () => {
             className="mt-6 flex justify-center"
           >
             <motion.button
-              onClick={() => setShowAllMobile(true)}
+              onClick={() => setShowAllCards(true)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-500 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-shadow"
             >
-              <span>더 보기 ({filteredSkills.length - 6}개)</span>
+              <span>더 보기 ({filteredSkills.length - initialCount}개)</span>
               <FiChevronDown className="w-5 h-5" />
             </motion.button>
           </motion.div>

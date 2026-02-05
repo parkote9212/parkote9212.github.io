@@ -35,12 +35,12 @@ const normalizeUrl = (url: string): string => {
 };
 
 /**
- * 프로젝트 섹션. 상태 필터(전체/완료/진행중), 카드 그리드, 모달 상세를 표시합니다.
+ * 프로젝트 섹션. 상태 필터(전체/완료/진행중/기획중), 카드 그리드, 모달 상세를 표시합니다.
  */
 const Projects = () => {
-  const [filter, setFilter] = useState<"all" | "completed" | "in-progress">(
-    "all",
-  );
+  const [filter, setFilter] = useState<
+    "all" | "completed" | "in-progress" | "planned"
+  >("all");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filteredProjects = useMemo(
@@ -707,6 +707,19 @@ const Projects = () => {
             <HiOutlineWrenchScrewdriver className="w-5 h-5" />
             In Progress (
             {projects.filter((p) => p.status === "in-progress").length})
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFilter("planned")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${filter === "planned"
+                ? "bg-gradient-to-r from-primary-600 to-accent-500 text-white shadow-lg"
+                : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 hover:shadow-md"
+              }`}
+          >
+            <FiInbox className="w-5 h-5" />
+            Planned (
+            {projects.filter((p) => p.status === "planned").length})
           </motion.button>
         </motion.div>
 

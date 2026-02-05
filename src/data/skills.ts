@@ -1,25 +1,42 @@
 import React from "react";
 import { FaJava, FaRocket } from "react-icons/fa";
-import { FiCpu, FiDatabase, FiSettings } from "react-icons/fi";
+import {
+  FiCpu,
+  FiDatabase,
+  FiLock,
+  FiSettings,
+} from "react-icons/fi";
 import { HiOutlineColorSwatch } from "react-icons/hi";
 import {
   SiAmazon,
+  SiClaude,
   SiCss3,
   SiDocker,
   SiGit,
   SiGithub,
+  SiGooglegemini,
   SiHtml5,
   SiJavascript,
   SiLinux,
   SiMariadb,
   SiPython,
+  SiRaycast,
   SiReact,
+  SiRedis,
   SiSpring,
   SiSpringboot,
+  SiTailwindcss,
   SiTypescript,
   SiVuedotjs,
 } from "react-icons/si";
 import { TbBrandOpenai } from "react-icons/tb";
+import {
+  ChromaDBIcon,
+  CursorIcon,
+  FastAPIIcon,
+  MyBatisIcon,
+  ZustandIcon,
+} from "../assets/icons/LogoIcons";
 
 // IconType 정의
 type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -41,7 +58,7 @@ export const skills: Skill[] = [
     icon: SiHtml5,
     category: "frontend",
     color: "text-orange-600",
-    description: "웹 페이지 구조 작성 및 접근성 고려",
+    description: "시맨틱 마크업, 폼·접근성(ARIA), SEO 고려 구조 작성",
   },
   {
     name: "CSS3",
@@ -49,7 +66,7 @@ export const skills: Skill[] = [
     icon: SiCss3,
     category: "frontend",
     color: "text-blue-600",
-    description: "반응형 레이아웃 및 스타일링",
+    description: "Flexbox·Grid 레이아웃, 미디어쿼리 반응형, 애니메이션",
   },
   {
     name: "JavaScript",
@@ -57,7 +74,7 @@ export const skills: Skill[] = [
     icon: SiJavascript,
     category: "frontend",
     color: "text-yellow-500",
-    description: "동적 웹 기능 구현",
+    description: "ES6+ 문법, DOM·이벤트 제어, 비동기(Promise/async)",
   },
   {
     name: "TypeScript",
@@ -65,7 +82,7 @@ export const skills: Skill[] = [
     icon: SiTypescript,
     category: "frontend",
     color: "text-blue-700",
-    description: "타입 안정성을 갖춘 JavaScript 개발",
+    description: "인터페이스·제네릭, strict 모드, React/Vite 연동",
   },
   {
     name: "React",
@@ -73,7 +90,7 @@ export const skills: Skill[] = [
     icon: SiReact,
     category: "frontend",
     color: "text-cyan-500",
-    description: "컴포넌트 기반 UI 개발",
+    description: "함수형 컴포넌트·Hooks, React 18/19, Vite 빌드",
   },
   {
     name: "Vue.js",
@@ -81,7 +98,23 @@ export const skills: Skill[] = [
     icon: SiVuedotjs,
     category: "frontend",
     color: "text-green-600",
-    description: "Vue 프레임워크 기초 활용",
+    description: "Composition API, Pinia 상태 관리, Vite·Tailwind 연동",
+  },
+  {
+    name: "Tailwind CSS",
+    level: 56,
+    icon: SiTailwindcss,
+    category: "frontend",
+    color: "text-cyan-500",
+    description: "유틸리티 퍼스트, JIT·다크모드, v4 PostCSS(@tailwindcss/postcss)",
+  },
+  {
+    name: "Zustand",
+    level: 58,
+    icon: ZustandIcon,
+    category: "frontend",
+    color: "text-amber-600",
+    description: "slice 패턴·미들웨어, React 훅(useStore), 경량 전역 상태",
   },
 
   // Backend (실제 코드 기반으로 정확하게)
@@ -95,11 +128,19 @@ export const skills: Skill[] = [
   },
   {
     name: "Python",
-    level: 65,
+    level: 61,
     icon: SiPython,
     category: "backend",
     color: "text-blue-500",
-    description: "FastAPI 기반 백엔드 개발, AST 파싱, 벡터 데이터베이스 연동",
+    description: "AST 파싱, 스크립팅, 데이터 처리, 벡터 DB 연동",
+  },
+  {
+    name: "FastAPI",
+    level: 61,
+    icon: FastAPIIcon,
+    category: "backend",
+    color: "text-teal-600",
+    description: "비동기 REST API, Pydantic 스키마, SSE 스트리밍, 의존성 주입",
   },
   {
     name: "Spring Framework",
@@ -115,7 +156,15 @@ export const skills: Skill[] = [
     icon: SiSpringboot,
     category: "backend",
     color: "text-green-700",
-    description: "RESTful API 설계, Spring Security, WebSocket 통신, Batch Job 구현",
+    description: "RESTful API 설계, 자동 구성, WebSocket 통신, Batch Job 구현",
+  },
+  {
+    name: "Spring Security",
+    level: 68,
+    icon: FiLock,
+    category: "backend",
+    color: "text-green-600",
+    description: "JWT 인증/인가, Access·Refresh Token, 권한 체크, CORS·CSRF 설정",
   },
   {
     name: "JPA",
@@ -128,7 +177,7 @@ export const skills: Skill[] = [
   {
     name: "MyBatis",
     level: 70,
-    icon: FiDatabase,
+    icon: MyBatisIcon,
     category: "backend",
     color: "text-red-700",
     description: "동적 SQL 작성, 복잡한 조인 및 서브쿼리 처리, 성능 최적화",
@@ -150,6 +199,30 @@ export const skills: Skill[] = [
     category: "database",
     color: "text-purple-600",
     description: "ER 다이어그램 설계, 정규화 및 역정규화, ACID 트랜잭션 관리",
+  },
+  {
+    name: "벡터DB",
+    level: 56,
+    icon: FiDatabase,
+    category: "database",
+    color: "text-indigo-600",
+    description: "임베딩 저장·유사도 검색, RAG 파이프라인 연동",
+  },
+  {
+    name: "ChromaDB",
+    level: 56,
+    icon: ChromaDBIcon,
+    category: "database",
+    color: "text-emerald-600",
+    description: "로컬 벡터 DB, 코드·문서 임베딩 저장 및 유사도 검색 (RAG)",
+  },
+  {
+    name: "Redis",
+    level: 58,
+    icon: SiRedis,
+    category: "database",
+    color: "text-red-600",
+    description: "캐시, 세션 스토어, 분산 락 (결재 동시성 제어 등)",
   },
 
   // DevOps
@@ -196,12 +269,36 @@ export const skills: Skill[] = [
 
   // AI Tools
   {
-    name: "AI Assistant",
-    level: 80,
-    icon: TbBrandOpenai,
+    name: "Cursor",
+    level: 85,
+    icon: CursorIcon,
     category: "ai",
     color: "text-emerald-600",
-    description: "Cursor/Claude 활용 효율적 코드 생성, 디버깅 및 코드 리뷰",
+    description: "AI 기반 IDE, 코드 생성·리팩터·디버깅, MCP·에이전트 워크플로우",
+  },
+  {
+    name: "Claude",
+    level: 80,
+    icon: SiClaude,
+    category: "ai",
+    color: "text-amber-600",
+    description: "Anthropic LLM, 코딩·문서·분석, API 연동·스트리밍 응답",
+  },
+  {
+    name: "Gemini / NotebookLM",
+    level: 70,
+    icon: SiGooglegemini,
+    category: "ai",
+    color: "text-blue-600",
+    description: "Google AI, 문서 요약·질의응답, 소스 기반 노트·리서치",
+  },
+  {
+    name: "Raycast",
+    level: 75,
+    icon: SiRaycast,
+    category: "ai",
+    color: "text-orange-500",
+    description: "맥용 런처, 확장·스크립트, AI 프롬프트·클립보드·워크플로우",
   },
   {
     name: "LLM 활용",
@@ -217,7 +314,7 @@ export const skills: Skill[] = [
     icon: TbBrandOpenai,
     category: "ai",
     color: "text-indigo-600",
-    description: "Model Context Protocol, 외부 API 연동, 개발 워크플로우 자동화",
+    description: "Model Context Protocol, Claude Desktop·Notion·Obsidian 연동, 개발 워크플로우 자동화",
   },
 ];
 
